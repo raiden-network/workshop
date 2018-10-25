@@ -1,0 +1,75 @@
+<!doctype html> 
+<html lang="en"> 
+<head> 
+    <meta charset="UTF-8" />
+    <title>Making your first Phaser 3 Game - Part 5</title>
+    <script src="//cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <style type="text/css">
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+<script type="text/javascript">
+
+    axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
+    const url_suffix = "api/1/payments"
+
+    const node1 = "http://127.0.0.1:5001/";
+    // const node2 = "http://127.0.0.1:5002/";
+    const nodes = [node1];
+
+    // create an array of known payment ids for each node
+    let known_payments = []
+    nodes.forEach((item, id) => {
+        known_payments.push([1540471688263]);  // FIXME: remove the initial payment ID
+    });
+
+    const update_transfers = async () => {
+        try {
+            // request payments from all nodes in parallel
+            let allNodes = nodes.map(node => axios.get(`${node}${url_suffix}`));
+            let results = await Promise.all(allNodes);
+
+            let new_payments = [];
+
+            results.forEach((result, id) => {
+                let transfers = result.data
+                let new_transfers = 0;
+                transfers.forEach(transfer =>{
+                    // just react to transfers that were received
+                    if (transfer.event === "EventPaymentReceivedSuccess") {
+                        let payment_id = transfer.identifier;
+                        const known_payment = known_payments[id].indexOf(payment_id) >= 0;
+
+                        // handle the payment and make sure it's not processed again
+                        if (!known_payment) {
+                            let amount = transfer.amount;
+                            console.log('new payment', amount, payment_id);
+                            known_payments[id].push(payment_id);
+                            new_transfers += 1;
+                        }
+                        console.log(known_payments[id])
+                    }
+                });
+                new_payments.push(new_transfers);
+            });
+
+            return new_payments;
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
+    const update_transfers2 = async () => {
+        let a = await update_transfers();
+        console.log(a);
+    }
+    update_transfers2();
+</script>
+
+</body>
+</html>
