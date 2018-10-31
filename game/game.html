@@ -15,6 +15,9 @@
 
 <script type="text/javascript">
 
+var MOVE_MULTIPLIER = 100.0;
+var UPDATE_INTERVAL = 1000;
+
 var config = {
     type: Phaser.AUTO,
     width: 1200,
@@ -22,7 +25,7 @@ var config = {
     physics: {
         default: 'arcade',
         arcade: {
-            gravity: { y: 300 },
+            gravity: { y: 200 },
             debug: false
         }
     },
@@ -46,19 +49,29 @@ var cursors;
 var score = 0;
 var gameOver = false;
 var scoreText;
+var score1;
+var score2;
+var score3;
+var score4;
+var paymentCounter1 = 0;
+var paymentCounter2 = 2;
+var paymentCounter3 = 0;
+var paymentCounter4 = 0;
 var second_timer = 0;
 
 axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
 const url_suffix = "api/1/payments"
 
-const node1 = "http://127.0.0.1:5001/";
-// const node2 = "http://127.0.0.1:5002/";
-const nodes = [node1];
+const node1 = "http://localhost:5001/";
+const node2 = "http://localhost:5002/";
+const node3 = "http://localhost:5003/";
+const node4 = "http://localhost:5004/";
+const nodes = [node1, node2, node3, node4];
 
 // create an array of known payment ids for each node
 let known_payments = []
 nodes.forEach((item, id) => {
-    known_payments.push([1540471688263]);  // FIXME: remove the initial payment ID
+    known_payments.push([]);
 });
 
 var game = new Phaser.Game(config);
@@ -69,7 +82,7 @@ function preload()
     this.load.image('ground', 'assets/platform.png');
     this.load.image('star', 'assets/heart2.png');
     this.load.image('doge', 'assets/doge.png');
-    this.load.image('bomb', 'assets/bomb.png');
+    this.load.image('bomb', 'assets/cat.png');
     this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
     this.load.image('flag', 'assets/flag.png');
     this.load.image('unicorn', 'assets/unicorn.png');
@@ -97,55 +110,28 @@ function create()
 
     //  Now let's create some ledges
     platforms.create(50, 100, 'ground');
-    platforms.create(200, 250, 'ground');
+    platforms.create(50, 250, 'ground');
     platforms.create(50, 400, 'ground');
     platforms.create(1250, 150, 'ground');
-
-
-    // platforms.create(200, 300, 'ground');
-    // platforms.create(200, 500, 'ground');
-    // platforms.create(200, 100, 'ground');
-
     
     flag = this.physics.add.sprite(1160, 450, 'flag').setScale(0.25);
     flag.setBounce(0);
 
     // The player and its settings
-    player = this.physics.add.sprite(30, 450, 'deva').setScale(0.4);
-    player2 = this.physics.add.sprite(30, 300, 'heiko').setScale(0.4);
-    player3 = this.physics.add.sprite(30, 150, 'vitalik').setScale(0.4);
-    player4 = this.physics.add.sprite(30, 0, 'carlos').setScale(0.4);
+    player = this.physics.add.sprite(30, 0, 'deva').setScale(0.4);
+    player2 = this.physics.add.sprite(30, 150, 'heiko').setScale(0.4);
+    player3 = this.physics.add.sprite(30, 300, 'vitalik').setScale(0.4);
+    player4 = this.physics.add.sprite(30, 450, 'carlos').setScale(0.4);
 
     //  Player physics properties. Give the little guy a slight bounce.
     player.setBounce(0.2);
-    player.setCollideWorldBounds(true);
+    player.setCollideWorldBounds(false);
     player2.setBounce(0.2);
-    player2.setCollideWorldBounds(true);
+    player2.setCollideWorldBounds(false);
     player3.setBounce(0.2);
-    player3.setCollideWorldBounds(true);
+    player3.setCollideWorldBounds(false);
     player4.setBounce(0.2);
-    player4.setCollideWorldBounds(true);
-
-    //  Our player animations, turning, walking left and walking right.
-    // this.anims.create({
-    //     key: 'left',
-    //     frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
-    //     frameRate: 10,
-    //     repeat: -1
-    // });
-
-    // this.anims.create({
-    //     key: 'turn',
-    //     frames: [ { key: 'dude', frame: 4 } ],
-    //     frameRate: 20
-    // });
-
-    // this.anims.create({
-    //     key: 'right',
-    //     frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
-    //     frameRate: 10,
-    //     repeat: -1
-    // });
+    player4.setCollideWorldBounds(false);
 
     //  Input Events
     cursors = this.input.keyboard.createCursorKeys();
@@ -153,8 +139,8 @@ function create()
     //  Some stars to collect, 12 in total, evenly spaced 70 pixels apart along the x axis
     stars = this.physics.add.group({
         key: 'star',
-        repeat: 7,
-        setXY: { x: 5*70, y: 0, stepX: 80 }
+        repeat: 2,
+        setXY: { x: 5*100, y: 0, stepX: 200 }
     });
 
     stars.children.iterate(function (child) {
@@ -165,7 +151,12 @@ function create()
     bombs = this.physics.add.group();
 
     //  The score
-    scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+    scoreText = this.add.text(400, 300, '', { fontSize: '60px', fill: '#000' });
+
+    score1 = this.add.text(10, 90, '0 payments', {fontSize: '20px', fill: '#FFF'})
+    score2 = this.add.text(10, 240, '0 payments', {fontSize: '20px', fill: '#FFF'})
+    score3 = this.add.text(10, 390, '0 payments', {fontSize: '20px', fill: '#FFF'})
+    score4 = this.add.text(10, 540, '0 payments', {fontSize: '20px', fill: '#FFF'})
 
     //  Collide the player and the stars with the platforms
     this.physics.add.collider(player, platforms);
@@ -178,8 +169,14 @@ function create()
 
     //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
     this.physics.add.overlap(player, stars, collectStar, null, this);
+    this.physics.add.overlap(player2, stars, collectStar, null, this);
+    this.physics.add.overlap(player3, stars, collectStar, null, this);
+    this.physics.add.overlap(player4, stars, collectStar, null, this);
 
     this.physics.add.overlap(player, flag, reachFlag, null, this);
+    this.physics.add.overlap(player2, flag, reachFlag, null, this);
+    this.physics.add.overlap(player3, flag, reachFlag, null, this);
+    this.physics.add.overlap(player4, flag, reachFlag, null, this);
 
     second_timer = this.time.now;
 }
@@ -204,11 +201,11 @@ async function update_transfers() {
                     // handle the payment and make sure it's not processed again
                     if (!known_payment) {
                         let amount = transfer.amount;
-                        console.log('new payment', amount, payment_id);
+                        // console.log('new payment', amount, payment_id);
                         known_payments[id].push(payment_id);
                         new_transfers += 1;
                     }
-                    console.log(known_payments[id])
+                    // console.log(known_payments[id])
                 }
             });
             new_payments.push(new_transfers);
@@ -228,42 +225,28 @@ async function update ()
     }
 
     if (this.time.now > second_timer) {
-        console.log("A second just passed by, time to update...");
-        second_timer = this.time.now + 5000;
-        console.log(second_timer, this.time.now);
-
+        // console.log("A second just passed by, time to update...");
+        second_timer = this.time.now + UPDATE_INTERVAL;
         
-        let new_payments = await update_transfers()
-        console.log(new_payments);
-        console.log(20 * (new_payments[0] + 1));
-        player.setVelocityX(20 * (new_payments[0] + 1));
-    }
-    
-    if (cursors.left.isDown)
-    {
-        player.setVelocityX(-160);
-        player2.setVelocityX(-160);
-        player3.setVelocityX(-160);
-        player4.setVelocityX(-160);
-    }
-    else if (cursors.right.isDown)
-    {
-        player.setVelocityX(160);
-        player2.setVelocityX(160);
-        player3.setVelocityX(160);
-        player4.setVelocityX(160);
-    }
-    else
-    {
-        player.setVelocityX(0);
-        player2.setVelocityX(0);
-        player3.setVelocityX(0);
-        player4.setVelocityX(0);
-    }
+        // let new_payments = await update_transfers()
+        let new_payments = [10, 9, 8, 7];
+        // console.log(new_payments);
+        // console.log(20 * (new_payments[0] + 1));
 
-    if (cursors.up.isDown && player.body.touching.down)
-    {
-        player.setVelocityY(-330);
+        paymentCounter1 += new_payments[0];
+        paymentCounter2 += new_payments[1];
+        paymentCounter3 += new_payments[2];
+        paymentCounter4 += new_payments[3];
+        score1.setText(`${paymentCounter1} payments`);
+        score2.setText(`${paymentCounter2} payments`);
+        score3.setText(`${paymentCounter3} payments`);
+        score4.setText(`${paymentCounter4} payments`);
+        console.log(paymentCounter2);
+
+        player.setVelocityX(20 * (new_payments[0]));
+        player2.setVelocityX(20 * (new_payments[1]));
+        player3.setVelocityX(20 * (new_payments[2]));
+        player4.setVelocityX(20 * (new_payments[3]));
     }
 }
 
@@ -271,10 +254,7 @@ function collectStar (player, star)
 {
     star.disableBody(true, true);
 
-    //  Add and update the score
-    score += 10;
-    scoreText.setText('Score: ' + score);
-
+    player.setVelocityY(-333);
     if (stars.countActive(true) === 0)
     {
         //  A new batch of stars to collect
@@ -290,8 +270,8 @@ function collectStar (player, star)
         bomb.setBounce(1);
         bomb.setCollideWorldBounds(true);
         bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+        bomb.setScale(0.2, 0.2);
         bomb.allowGravity = false;
-
     }
 }
 
@@ -300,7 +280,8 @@ function reachFlag(player, flag) {
 
     //  Add and update the score
     score += 10;
-    scoreText.setText('You WON!');
+    scoreText.setText('To the MOOOOON!');
+    gameOver = true;
 }
 
 </script>
