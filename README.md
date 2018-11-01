@@ -75,8 +75,16 @@ Once Raiden is installed it's time to fire it up. This is done with the followin
     --eth-rpc-endpoint YOUR_RPC_ENDPOINT
 ```
 
-With Raiden now up and running, you can check out the WebUI at [localhost:5001](localhost:5001).
-You can now either `join` the [Devcon4TestTokens](https://kovan.etherscan.io/address/0x396764f15ed1467883a9a5b7d42acfb788cd1826#code) network or open a channel with somebody else from the workshop who also posted their address in the [gitter](https://gitter.im/raiden-network/devcon4-workshop).
+The node will ask you to accept the disclaimer and then ask you to choose which address you want to use. The list should only contain the one address the onboarder tool generated for you.
+
+It will take a bit of time for the node to finish launching.
+You'll see that it's ready once you see the message stating that the Rest-API has been started.
+
+You can now access the WebUI at [http://localhost:5001/](http://localhost:5001).
+
+#### Tell the rest
+
+Now that your Raiden node is running please post your address in [our gitter room](https://gitter.im/raiden-network/devcon4-workshop). So others can interact with your node.
 
 ### API commands:
 
@@ -142,3 +150,4 @@ Feel free to change the amounts of the payments.
 - [API documentation](https://raiden-network.readthedocs.io/en/latest/rest_api.html)
 - [Raiden installation instructions](https://raiden-network.readthedocs.io/en/latest/overview_and_guide.html#installation)
 - [Getting Started with Raiden API](https://raiden-network.readthedocs.io/en/latest/api_walkthrough.html)
+- [Devcon4TestTokens](https://kovan.etherscan.io/address/0x396764f15ed1467883a9a5b7d42acfb788cd1826#code)
