@@ -151,3 +151,4 @@ Feel free to change the amounts of the payments.
 - [Raiden installation instructions](https://raiden-network.readthedocs.io/en/latest/overview_and_guide.html#installation)
 - [Getting Started with Raiden API](https://raiden-network.readthedocs.io/en/latest/api_walkthrough.html)
 - [Devcon4TestTokens](https://kovan.etherscan.io/address/0x396764f15ed1467883a9a5b7d42acfb788cd1826#code)
+- [Workshop Gitter room](https://gitter.im/raiden-network/devcon4-workshop)
