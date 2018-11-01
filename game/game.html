@@ -15,7 +15,7 @@
 <body>
 <script type="text/javascript">
 
-var MOVE_MULTIPLIER = 20.0;
+var MOVE_MULTIPLIER = 40.0;
 var UPDATE_INTERVAL = 1000;
 
 var config = {
@@ -25,7 +25,7 @@ var config = {
     physics: {
         default: 'arcade',
         arcade: {
-            gravity: { y: 200 },
+            gravity: { y: 300 },
             debug: false
         }
     },
@@ -234,7 +234,7 @@ async function update ()
         second_timer = this.time.now + UPDATE_INTERVAL;
         
         let new_payments = await update_transfers()
-        // let new_payments = [10, 9, 8, 7];
+        // let new_payments = [1, 5, 2, 3];
 
         paymentCounter1 += new_payments[0];
         paymentCounter2 += new_payments[1];
@@ -256,7 +256,7 @@ function collectStar (player, star)
 {
     star.disableBody(true, true);
 
-    player.setVelocityY(-333);
+    player.setVelocityY(-200);
     if (stars.countActive(true) === 0 && !catIsThere)
     {
         //  A new batch of stars to collect
