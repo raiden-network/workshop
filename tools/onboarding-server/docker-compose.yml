@@ -1,0 +1,45 @@
+version: "3"
+
+services:
+  onb_server:
+    build: .
+    restart: always
+    volumes:
+      - /etc/onboarding_server:/config
+      - /var/log/onboarding_server:/log
+    command:
+      - "--keystore-file"
+      - "/config/keystore"
+      - "--password"
+      - "${KEYSTORE_PASSWORD}"
+      - "--eth-rpc-url"
+      - "${ETH_RPC_URL}"
+      - "--token-address"
+      - "${TOKEN_ADDRESS}"
+      - "--bind-addr"
+      - "0.0.0.0:80"
+      - "--public-url"
+      - "${PUBLIC_URL}"
+      - "--redis-host"
+      - "redis"
+      - "--log-path"
+      - "/log"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.port=80"
+      - "traefik.frontend.rule=Host:${SERVER_NAME}"
+
+  redis:
+    restart: always
+    image: redis:latest
+
+  traefik:
+    image: traefik:1.7
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /etc/traefik:/etc/traefik
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --acme.email=${LETSENCRYPT_EMAIL}
