@@ -42,7 +42,9 @@ tar -xvzf onboarder-linux.tar.gz
 ### Running Raiden:
 Once Raiden is installed it's time to fire it up. This is done with the following command:
 ```
-./raiden-binary --eth-rpc-endpoint YOUR_RPC_ENDPOINT --keystore-path keystore --network-id kovan --environment-type development
+./raiden-binary --eth-rpc-endpoint YOUR_RPC_ENDPOINT \
+    --keystore-path keystore --network-id kovan \
+    --environment-type development
 ```
 
 With Raiden now up and running, you can check out the WebUI at [localhost:5001](localhost:5001).
@@ -50,38 +52,60 @@ You can now either `join` the [Devcon4TestTokens](https://kovan.etherscan.io/add
 
 ### API commands:
 
+#### Open channels
 To start with we want to open channels with four already existing nodes. Run the following four commands to open four channels:
 
 **Node 1**
 ```
-curl -i -X PUT http://localhost:5001/api/1/channels -H 'Content-Type: application/json' --data-raw '{"partner_address": "0xFa047E7e2Dbc605CE1047d67468371a7bf67E461", "token_address": "0x396764f15ed1467883A9a5B7D42AcFb788CD1826", "total_deposit": 10000000000000000000}'
+curl -i -X PUT http://localhost:5001/api/1/channels \
+    -H 'Content-Type: application/json' --data-raw \
+    '{"partner_address": "0xFa047E7e2Dbc605CE1047d67468371a7bf67E461", \
+    "token_address": "0x396764f15ed1467883A9a5B7D42AcFb788CD1826", \
+    "total_deposit": 10000000000000000000}'
 ```
 
 **Node 2**
 ```
-curl -i -X PUT http://localhost:5001/api/1/channels -H 'Content-Type: application/json' --data-raw '{"partner_address": "0x8d5b7238925d9C934681430D22A1566dc4d0f9e7", "token_address": "0x396764f15ed1467883A9a5B7D42AcFb788CD1826", "total_deposit": 10000000000000000000}'
+curl -i -X PUT http://localhost:5001/api/1/channels \
+    -H 'Content-Type: application/json' --data-raw \
+    '{"partner_address": "0x8d5b7238925d9C934681430D22A1566dc4d0f9e7", \
+    "token_address": "0x396764f15ed1467883A9a5B7D42AcFb788CD1826", \
+    "total_deposit": 10000000000000000000}'
 ```
 
 **Node 3**
 ```
-curl -i -X PUT http://localhost:5001/api/1/channels -H 'Content-Type: application/json' --data-raw '{"partner_address": "0x13c0b391A87c1f3eAC9a5a7C17FaC6DFff83b84f", "token_address": "0x396764f15ed1467883A9a5B7D42AcFb788CD1826", "total_deposit": 10000000000000000000}'
+curl -i -X PUT http://localhost:5001/api/1/channels \
+    -H 'Content-Type: application/json' --data-raw \
+    '{"partner_address": "0x13c0b391A87c1f3eAC9a5a7C17FaC6DFff83b84f", \
+    "token_address": "0x396764f15ed1467883A9a5B7D42AcFb788CD1826", \
+    "total_deposit": 10000000000000000000}'
 ```
 
 **Node 4**
 ```
-curl -i -X PUT http://localhost:5001/api/1/channels -H 'Content-Type: application/json' --data-raw '{"partner_address": "0x7A96aeA5a95FF6bCDbB7B591f2A7B36faDA4a7e3", "token_address": "0x396764f15ed1467883A9a5B7D42AcFb788CD1826", "total_deposit": 10000000000000000000}'
+curl -i -X PUT http://localhost:5001/api/1/channels \
+    -H 'Content-Type: application/json' --data-raw \
+    '{"partner_address": "0x7A96aeA5a95FF6bCDbB7B591f2A7B36faDA4a7e3", \
+    "token_address": "0x396764f15ed1467883A9a5B7D42AcFb788CD1826", \
+    "total_deposit": 10000000000000000000}'
 ```
 
 #### Deposit
 If you ever need to top up a channel, you can use the following command:
 ```
-curl -i -X PATCH http://localhost:5001/api/1/channels/0x396764f15ed1467883A9a5B7D42AcFb788CD1826/0x7A96aeA5a95FF6bCDbB7B591f2A7B36faDA4a7e3 -H 'Content-Type: application/json' --data-raw '{"total_deposit": 15000000000000000000}'
+curl -i -X PATCH http://localhost:5001/api/1/channels/ \
+0x396764f15ed1467883A9a5B7D42AcFb788CD1826/ADDRESS_OF_PARTNER \
+-H 'Content-Type: application/json' \
+--data-raw '{"total_deposit": 15000000000000000000}'
 ```
 
 #### Make payments
 To make payments, choose any of the above addresses that you opened a channel with and do the following:
 ```
-curl -i -X POST http://localhost:5001/api/1/payments/0x396764f15ed1467883A9a5B7D42AcFb788CD1826/ADDRESS_OF_RECEIVER -H 'Content-Type: application/json' --data-raw '{"amount": 100000}'
+curl -i -X POST http://localhost:5001/api/1/payments/ \
+0x396764f15ed1467883A9a5B7D42AcFb788CD1826/ADDRESS_OF_RECEIVER \
+-H 'Content-Type: application/json' --data-raw '{"amount": 100000}'
 ```
 
 Feel free to change the amounts of the payments.
