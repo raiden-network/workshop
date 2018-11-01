@@ -233,8 +233,8 @@ async function update ()
         // console.log("A second just passed by, time to update...");
         second_timer = this.time.now + UPDATE_INTERVAL;
         
-        // let new_payments = await update_transfers()
-        let new_payments = [10, 9, 8, 7];
+        let new_payments = await update_transfers()
+        // let new_payments = [10, 9, 8, 7];
 
         paymentCounter1 += new_payments[0];
         paymentCounter2 += new_payments[1];
@@ -279,8 +279,6 @@ function collectStar (player, star)
 }
 
 function reachFlag(player, flag) {
-    // star.disableBody(true, true);
-
     //  Add and update the score
     score += 10;
     scoreText.setText('To the MOOOOON!');
@@ -288,8 +286,6 @@ function reachFlag(player, flag) {
 }
 
 </script>
-
-
 <li>
     <ul>Deva: 0xFa047E7e2Dbc605CE1047d67468371a7bf67E461</ul>
     <ul>Heiko: 0x8d5b7238925d9C934681430D22A1566dc4d0f9e7</ul>
