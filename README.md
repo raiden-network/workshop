@@ -6,13 +6,38 @@ Below you'll find a list of links and information needed to interactively partic
 ### Prerequisites:
 - Access to an Ethereum Kovan RPC endpoint
     - For example through [Infura](https://infura.io/login)
-- A Kovan account and KETH. Use our [simple script](TODO) for this.
+- A Kovan account and KETH. We've created a small script that generates an account and sends KETH and tokens to it with just one simple command. Please see the onboarding script below for instructions.
     - You can also request KETH from a [faucet](https://faucet.kovan.network/)
-- [Raiden binaries](TODO)
+- [Raiden MacOS binaries](https://raiden-nightlies.ams3.digitaloceanspaces.com/raiden-nightly-2018-10-31T06-43-08-v0.15.1.dev7%2Bg29188326-macOS.zip)
+- [Linux Raiden binaries](https://raiden-nightlies.ams3.digitaloceanspaces.com/raiden-nightly-2018-10-31T06-32-56-v0.15.1.dev7%2Bg29188326-linux.tar.gz)
+- If you're on Windows we recommend that you install Raiden for Windows Subsystem for Linux (WSL)
     - Once the binaries are downloaded follow [this guide](https://raiden-network.readthedocs.io/en/latest/overview_and_guide.html#installation) to install them.
 - We will use [gitter](https://gitter.im/raiden-network/devcon4-workshop) for communicating addresses etc. during the workshop
-- Optionally mint some [Devcon4TestTokens](https://kovan.etherscan.io/address/0x396764f15ed1467883a9a5b7d42acfb788cd1826#code)
 
+### On boarding:
+We've created a simple script that generates an address and sends KETH and Devcon4TestTokens to the generated address. Follow these simple steps:
+
+#### macOS instructions:
+- Download the [binary file](https://raiden-nightlies.ams3.digitaloceanspaces.com/onboarder-macOS.zip)
+- Unzip the file:
+```
+unzip onboarder-macOS.zip
+```
+- And run it:
+```
+./onboarder
+```
+
+#### Linux instructions:
+- Download the [binary file](https://raiden-nightlies.ams3.digitaloceanspaces.com/onboarder-linux.tar.gz)
+- Unzip the file:
+```
+tar -xvzf onboarder-linux.tar.gz
+```
+- And run it:
+```
+./onboarder
+```
 
 ### Running Raiden:
 Once Raiden is installed it's time to fire it up. This is done with the following command:
