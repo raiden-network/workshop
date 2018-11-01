@@ -8,14 +8,14 @@
     <style type="text/css">
         body {
             margin: 0;
+            font-family: 'Courier New', Courier, monospace;
         }
     </style>
 </head>
 <body>
-
 <script type="text/javascript">
 
-var MOVE_MULTIPLIER = 100.0;
+var MOVE_MULTIPLIER = 20.0;
 var UPDATE_INTERVAL = 1000;
 
 var config = {
@@ -54,10 +54,11 @@ var score2;
 var score3;
 var score4;
 var paymentCounter1 = 0;
-var paymentCounter2 = 2;
+var paymentCounter2 = 0;
 var paymentCounter3 = 0;
 var paymentCounter4 = 0;
 var second_timer = 0;
+var catIsThere = false;
 
 axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
 const url_suffix = "api/1/payments"
@@ -93,7 +94,7 @@ function preload()
     this.load.image('heiko', 'assets/heiko.png');
 }
 
-function create()
+async function create()
 {
     //  A simple background for our game
     this.add.image(400, 300, 'sky');
@@ -178,6 +179,9 @@ function create()
     this.physics.add.overlap(player3, flag, reachFlag, null, this);
     this.physics.add.overlap(player4, flag, reachFlag, null, this);
 
+    await update_transfers()
+    console.log("Initialized payments")
+    console.log(known_payments)
     second_timer = this.time.now;
 }
 
@@ -214,6 +218,7 @@ async function update_transfers() {
         return new_payments;
     } catch (error) {
         console.error('Error:', error);
+        return [0, 0, 0, 0];
     }
 }
 
@@ -230,8 +235,6 @@ async function update ()
         
         // let new_payments = await update_transfers()
         let new_payments = [10, 9, 8, 7];
-        // console.log(new_payments);
-        // console.log(20 * (new_payments[0] + 1));
 
         paymentCounter1 += new_payments[0];
         paymentCounter2 += new_payments[1];
@@ -241,12 +244,11 @@ async function update ()
         score2.setText(`${paymentCounter2} payments`);
         score3.setText(`${paymentCounter3} payments`);
         score4.setText(`${paymentCounter4} payments`);
-        console.log(paymentCounter2);
 
-        player.setVelocityX(20 * (new_payments[0]));
-        player2.setVelocityX(20 * (new_payments[1]));
-        player3.setVelocityX(20 * (new_payments[2]));
-        player4.setVelocityX(20 * (new_payments[3]));
+        player.setVelocityX(MOVE_MULTIPLIER * (new_payments[0]));
+        player2.setVelocityX(MOVE_MULTIPLIER * (new_payments[1]));
+        player3.setVelocityX(MOVE_MULTIPLIER * (new_payments[2]));
+        player4.setVelocityX(MOVE_MULTIPLIER * (new_payments[3]));
     }
 }
 
@@ -255,7 +257,7 @@ function collectStar (player, star)
     star.disableBody(true, true);
 
     player.setVelocityY(-333);
-    if (stars.countActive(true) === 0)
+    if (stars.countActive(true) === 0 && !catIsThere)
     {
         //  A new batch of stars to collect
         stars.children.iterate(function (child) {
@@ -272,6 +274,7 @@ function collectStar (player, star)
         bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
         bomb.setScale(0.2, 0.2);
         bomb.allowGravity = false;
+        catIsThere = true;
     }
 }
 
@@ -286,5 +289,13 @@ function reachFlag(player, flag) {
 
 </script>
 
+
+<li>
+    <ul>Deva: 0xFa047E7e2Dbc605CE1047d67468371a7bf67E461</ul>
+    <ul>Heiko: 0x8d5b7238925d9C934681430D22A1566dc4d0f9e7</ul>
+    <ul>Vitalik: 0x13c0b391A87c1f3eAC9a5a7C17FaC6DFff83b84f</ul>
+    <ul>Carlos: 0x7A96aeA5a95FF6bCDbB7B591f2A7B36faDA4a7e3</ul>
+</li>
+<br />
 </body>
 </html>
