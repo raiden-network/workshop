@@ -68,9 +68,11 @@ tar xvzf raiden-nightly-2018-10-31T06-32-56-v0.15.1.dev7+g29188326-linux.tar.gz
 ### Running Raiden:
 Once Raiden is installed it's time to fire it up. This is done with the following command:
 ```sh
-./raiden-binary --eth-rpc-endpoint YOUR_RPC_ENDPOINT \
-    --keystore-path keystore --network-id kovan \
-    --environment-type development
+./raiden-binary \
+    --keystore-path keystore \
+    --network-id kovan \
+    --environment-type development \
+    --eth-rpc-endpoint YOUR_RPC_ENDPOINT
 ```
 
 With Raiden now up and running, you can check out the WebUI at [localhost:5001](localhost:5001).
