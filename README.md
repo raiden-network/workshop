@@ -72,6 +72,7 @@ Once Raiden is installed it's time to fire it up. This is done with the followin
     --keystore-path keystore \
     --network-id kovan \
     --environment-type development \
+    --gas-price 20000000000 \
     --eth-rpc-endpoint YOUR_RPC_ENDPOINT
 ```
 
