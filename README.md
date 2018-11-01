@@ -73,7 +73,7 @@ Once Raiden is installed it's time to fire it up. This is done with the followin
     --network-id kovan \
     --environment-type development \
     --gas-price 20000000000 \
-    --eth-rpc-endpoint YOUR_RPC_ENDPOINT
+    --eth-rpc-endpoint https://kovan.infura.io/v3/edfa384a4a9c4eedb2721827b07261
 ```
 
 The node will ask you to accept the disclaimer and then ask you to choose which address you want to use. The list should only contain the one address the onboarder tool generated for you.
