@@ -15,7 +15,10 @@ Below you'll find a list of links and information needed to interactively partic
 We've created a simple script that generates an keystore / address and sends Kovan ETH and Devcon4TestTokens to the generated address. Follow these simple steps:
 
 #### macOS instructions
-- Download the onboarder [macOS binary](https://raiden-nightlies.ams3.digitaloceanspaces.com/onboarder-macOS.zip)
+- Download the onboarder [macOS binary](https://raiden-nightlies.ams3.digitaloceanspaces.com/onboarder-macOS.zip):
+```sh
+curl -O https://raiden-nightlies.ams3.digitaloceanspaces.com/onboarder-macOS.zip
+```
 - Unzip the file:
 ```sh
 unzip onboarder-macOS.zip
@@ -26,7 +29,10 @@ unzip onboarder-macOS.zip
 ```
 
 #### Linux instructions
-- Download the onboarder [linux binary](https://raiden-nightlies.ams3.digitaloceanspaces.com/onboarder-linux.tar.gz)
+- Download the onboarder [linux binary](https://raiden-nightlies.ams3.digitaloceanspaces.com/onboarder-linux.tar.gz):
+```sh
+curl -O https://raiden-nightlies.ams3.digitaloceanspaces.com/onboarder-linux.tar.gz
+```
 - Extract the file:
 ```sh
 tar -xvzf onboarder-linux.tar.gz
@@ -40,14 +46,20 @@ tar -xvzf onboarder-linux.tar.gz
 The fastest way to get up and running is to use the the latest nightly binary releases. Just follow the instructions below.
 
 #### macOS instructions
-- Download the [latest nightly macOS binary](https://raiden-nightlies.ams3.digitaloceanspaces.com/raiden-nightly-2018-10-31T06-43-08-v0.15.1.dev7%2Bg29188326-macOS.zip)
+- Download the [latest nightly macOS binary](https://raiden-nightlies.ams3.digitaloceanspaces.com/raiden-nightly-2018-10-31T06-43-08-v0.15.1.dev7%2Bg29188326-macOS.zip):
+```sh
+curl -O https://raiden-nightlies.ams3.digitaloceanspaces.com/raiden-nightly-2018-10-31T06-43-08-v0.15.1.dev7%2Bg29188326-macOS.zip
+```
 - Unzip the file:
 ```sh
 unzip raiden-nightly-2018-10-31T06-43-08-v0.15.1.dev7+g29188326-macOS.zip
 ```
 
 #### Linux instructions
-- Download the [latest nightly linux binary](https://raiden-nightlies.ams3.digitaloceanspaces.com/raiden-nightly-2018-10-31T06-32-56-v0.15.1.dev7%2Bg29188326-linux.tar.gz)
+- Download the [latest nightly linux binary](https://raiden-nightlies.ams3.digitaloceanspaces.com/raiden-nightly-2018-10-31T06-32-56-v0.15.1.dev7%2Bg29188326-linux.tar.gz):
+```sh
+curl -O https://raiden-nightlies.ams3.digitaloceanspaces.com/raiden-nightly-2018-10-31T06-32-56-v0.15.1.dev7%2Bg29188326-linux.tar.gz
+```
 - Extract the file:
 ```sh
 tar xvzf raiden-nightly-2018-10-31T06-32-56-v0.15.1.dev7+g29188326-linux.tar.gz
