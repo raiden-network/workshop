@@ -63,6 +63,7 @@ curl -O https://raiden-nightlies.ams3.digitaloceanspaces.com/raiden-nightly-2018
 - Extract the file:
 ```sh
 tar xvzf raiden-nightly-2018-10-31T06-32-56-v0.15.1.dev7%2Bg29188326-linux.tar.gz
+cp raiden-v0.15.1.dev7+g29188326-linux raiden-binary
 ```
 
 ### Running Raiden:
