@@ -1,7 +1,7 @@
-# Raiden Network hands-on workshop @ devcon4
+# ETHSingapre Hackathon Raiden Network guide
 
-This is the repo for the Devcon4 Raiden workshop.
-Below you'll find a list of links and information needed to interactively participate in the workshop.
+This is the repo for the Raiden Network at the ETHSingapore hackathon.
+Below you'll find a list of links and information needed to get going with Raiden for the hackathon.
 
 ### Prerequisites:
 - Access to an Ethereum Kovan RPC endpoint
@@ -9,10 +9,10 @@ Below you'll find a list of links and information needed to interactively partic
 - A Kovan account and KETH. We've created a small tool that generates an account and sends KETH and tokens to it with just one simple command. Please see the [onboarding section](#on-boarding) below for instructions.
 - The Raiden client itself. Please see the [getting Raiden](#getting-raiden) section below.
   - If you're on Windows we recommend that you install Raiden for Windows Subsystem for Linux (WSL)
-- We will use [a gitter room](https://gitter.im/raiden-network/devcon4-workshop) for communicating addresses etc. during the workshop
+- We have created [a gitter room](https://gitter.im/raiden-network/eth-singapore-hackathon) that you can use for asking questions or find out where you can find us if you need help or want to discuss something face-to-face.
 
 ### On-boarding:
-We've created a simple script that generates an keystore / address and sends Kovan ETH and Devcon4TestTokens to the generated address. Follow these simple steps:
+We've created a simple script that generates a keystore / address and sends Kovan ETH and ETHSingaporeTokens to the generated address. Follow these simple steps:
 
 #### macOS instructions
 - Download the onboarder [macOS binary](https://raiden-nightlies.ams3.digitaloceanspaces.com/onboarder-macOS.zip):
@@ -43,38 +43,36 @@ tar -xvzf onboarder-linux.tar.gz
 ```
 
 ### Getting Raiden
-The fastest way to get up and running is to use the the latest nightly binary releases. Just follow the instructions below.
+The fastest way to get up and running is to use the latest nightly binary releases. Just follow the instructions below.
 
 #### macOS instructions
-- Download the [latest nightly macOS binary](https://raiden-nightlies.ams3.digitaloceanspaces.com/raiden-nightly-2018-10-31T06-43-08-v0.15.1.dev7%2Bg29188326-macOS.zip):
+- Download the [latest nightly macOS binary](https://raiden-nightlies.ams3.digitaloceanspaces.com/raiden-nightly-2018-12-06T18-08-23-v0.18.1.dev57%2Bg786347b2-macOS.zip):
 ```sh
-curl -O https://raiden-nightlies.ams3.digitaloceanspaces.com/raiden-nightly-2018-10-31T06-43-08-v0.15.1.dev7%2Bg29188326-macOS.zip
+curl -O https://raiden-nightlies.ams3.digitaloceanspaces.com/raiden-nightly-2018-12-06T18-08-23-v0.18.1.dev57%2Bg786347b2-macOS.zip
 ```
 - Unzip the file:
 ```sh
-unzip raiden-nightly-2018-10-31T06-43-08-v0.15.1.dev7%2Bg29188326-macOS.zip
+unzip raiden-nightly-2018-12-06T18-08-23-v0.18.1.dev57%2Bg786347b2-macOS.zip
 ```
 
 #### Linux instructions
-- Download the [latest nightly linux binary](https://raiden-nightlies.ams3.digitaloceanspaces.com/raiden-nightly-2018-10-31T06-32-56-v0.15.1.dev7%2Bg29188326-linux.tar.gz):
+- Download the [latest nightly linux binary](https://raiden-nightlies.ams3.digitaloceanspaces.com/raiden-nightly-2018-12-06T17-58-34-v0.18.1.dev57%2Bg786347b2-linux.tar.gz):
 ```sh
-curl -O https://raiden-nightlies.ams3.digitaloceanspaces.com/raiden-nightly-2018-10-31T06-32-56-v0.15.1.dev7%2Bg29188326-linux.tar.gz
+curl -O https://raiden-nightlies.ams3.digitaloceanspaces.com/raiden-nightly-2018-12-06T17-58-34-v0.18.1.dev57%2Bg786347b2-linux.tar.gz
 ```
 - Extract the file:
 ```sh
-tar xvzf raiden-nightly-2018-10-31T06-32-56-v0.15.1.dev7%2Bg29188326-linux.tar.gz
-cp raiden-v0.15.1.dev7+g29188326-linux raiden-binary
+tar xvzf raiden-nightly-2018-12-06T17-58-34-v0.18.1.dev57%2Bg786347b2-linux.tar.gz
 ```
 
 ### Running Raiden:
-Once Raiden is installed it's time to fire it up. This is done with the following command:
+Once Raiden is installed it's time to fire it up. This is done with the following command (Please make sure the replace `raiden-binary` with the actual binary you just created above):
 ```sh
 ./raiden-binary \
     --keystore-path keystore \
     --network-id kovan \
     --environment-type development \
-    --gas-price 20000000000 \
-    --eth-rpc-endpoint https://kovan.infura.io/v3/edfa384a4a9c4eedb2721827b07261
+    --eth-rpc-endpoint https://kovan.infura.io/v3/YOUR_INFURA_TOKEN
 ```
 
 The node will ask you to accept the disclaimer and then ask you to choose which address you want to use. The list should only contain the one address the onboarder tool generated for you.
@@ -86,46 +84,19 @@ You can now access the WebUI at [http://localhost:5001/](http://localhost:5001).
 
 #### Tell the rest
 
-Now that your Raiden node is running please post your address in [our gitter room](https://gitter.im/raiden-network/devcon4-workshop). So others can interact with your node.
+You should now have running Raiden node. From here you can join the ETHSingaporeTokens network. We recommend posting your address in the gitter channel if you want to try it out with someone else hacking on Raiden.
+You can also check out how the network is growing by checking out the [Raiden Explorer](https://kovan.explorer.raiden.network/tokens/0x98a345f06e3A5DFe28EE0af38dd0780b4C0ed73B) for the ETHSingaporeToken.
 
 ### API commands:
 
 #### Open channels
-To start with we want to open channels with four already existing nodes. Run the following four commands to open four channels:
+The first thing to do when Raiden is up and running is to open a channel with someone. You can do so by opening a channel with the node below, or to find another hacker building on Raiden and open a channel with him. For this you just have to replace the `partner_address` below with his/her address.
 
-**Node 1**
 ```sh
 curl -i -X PUT http://localhost:5001/api/1/channels \
     -H 'Content-Type: application/json' --data-raw \
-    '{"partner_address": "0xFa047E7e2Dbc605CE1047d67468371a7bf67E461", \
-    "token_address": "0x396764f15ed1467883A9a5B7D42AcFb788CD1826", \
-    "total_deposit": 10000000000000000000}'
-```
-
-**Node 2**
-```sh
-curl -i -X PUT http://localhost:5001/api/1/channels \
-    -H 'Content-Type: application/json' --data-raw \
-    '{"partner_address": "0x8d5b7238925d9C934681430D22A1566dc4d0f9e7", \
-    "token_address": "0x396764f15ed1467883A9a5B7D42AcFb788CD1826", \
-    "total_deposit": 10000000000000000000}'
-```
-
-**Node 3**
-```sh
-curl -i -X PUT http://localhost:5001/api/1/channels \
-    -H 'Content-Type: application/json' --data-raw \
-    '{"partner_address": "0x13c0b391A87c1f3eAC9a5a7C17FaC6DFff83b84f", \
-    "token_address": "0x396764f15ed1467883A9a5B7D42AcFb788CD1826", \
-    "total_deposit": 10000000000000000000}'
-```
-
-**Node 4**
-```sh
-curl -i -X PUT http://localhost:5001/api/1/channels \
-    -H 'Content-Type: application/json' --data-raw \
-    '{"partner_address": "0x7A96aeA5a95FF6bCDbB7B591f2A7B36faDA4a7e3", \
-    "token_address": "0x396764f15ed1467883A9a5B7D42AcFb788CD1826", \
+    '{"partner_address": "0x0bae0289AAA26845224F528F9B9DefE69e01606E", \
+    "token_address": "0x98a345f06e3A5DFe28EE0af38dd0780b4C0ed73B", \
     "total_deposit": 10000000000000000000}'
 ```
 
@@ -133,16 +104,16 @@ curl -i -X PUT http://localhost:5001/api/1/channels \
 If you ever need to top up a channel, you can use the following command:
 ```sh
 curl -i -X PATCH http://localhost:5001/api/1/channels/ \
-0x396764f15ed1467883A9a5B7D42AcFb788CD1826/ADDRESS_OF_PARTNER \
+0x98a345f06e3A5DFe28EE0af38dd0780b4C0ed73B/ADDRESS_OF_PARTNER \
 -H 'Content-Type: application/json' \
 --data-raw '{"total_deposit": 15000000000000000000}'
 ```
 
 #### Make payments
-To make payments, choose any of the above addresses that you opened a channel with and do the following:
+To make payments, choose the address of the partner you've opened a channel with and do the following:
 ```sh
 curl -i -X POST http://localhost:5001/api/1/payments/ \
-0x396764f15ed1467883A9a5B7D42AcFb788CD1826/ADDRESS_OF_RECEIVER \
+0x98a345f06e3A5DFe28EE0af38dd0780b4C0ed73B/ADDRESS_OF_RECEIVER \
 -H 'Content-Type: application/json' --data-raw '{"amount": 100000}'
 ```
 
@@ -152,5 +123,5 @@ Feel free to change the amounts of the payments.
 - [API documentation](https://raiden-network.readthedocs.io/en/latest/rest_api.html)
 - [Raiden installation instructions](https://raiden-network.readthedocs.io/en/latest/overview_and_guide.html#installation)
 - [Getting Started with Raiden API](https://raiden-network.readthedocs.io/en/latest/api_walkthrough.html)
-- [Devcon4TestTokens](https://kovan.etherscan.io/address/0x396764f15ed1467883a9a5b7d42acfb788cd1826#code)
-- [Workshop Gitter room](https://gitter.im/raiden-network/devcon4-workshop)
+- [ETHSingaporeToken](https://kovan.etherscan.io/address/0x98a345f06e3A5DFe28EE0af38dd0780b4C0ed73B#code)
+- [Hackathon Gitter Room](https://gitter.im/raiden-network/eth-singapore-hackathon)
