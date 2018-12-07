@@ -1,4 +1,4 @@
-# ETHSingapre Hackathon Raiden Network guide
+# ETHSingapore Hackathon Raiden Network guide
 
 This is the repo for the Raiden Network at the ETHSingapore hackathon.
 Below you'll find a list of links and information needed to get going with Raiden for the hackathon.
