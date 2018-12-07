@@ -1,0 +1,828 @@
+openapi: "3.0.2"
+info:
+  description: "Raiden Network client API"
+  version: "1.0.0"
+  title: "Raiden Network"
+  contact:
+    email: "contact@raiden.network"
+servers:
+  - url: "http://localhost:5001/api/1"
+    description: "Development server"
+tags:
+- name: "raiden_network"
+  description: "Raiden Network"
+  externalDocs:
+    description: "Find out more"
+    url: "https://raiden-network.readthedocs.io/en/stable/rest_api.html"
+paths:
+  /address:
+    get:
+      tags:
+      - "address"
+      summary: "Query your address"
+      description: "When raiden starts, you choose an ethereum address which will also be your raiden address."
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  our_address:
+                    type: "string"
+  /tokens/{token_address}:
+    put:
+      tags:
+      - "tokens"
+      summary: "Registers a token"
+      description: "If a token is not registered yet (i.e.: A token network for that token does not exist in the registry), we need to register it by deploying a token network contract for that token."
+      parameters:
+      - name: "token_address"
+        in: "path"
+        description: "Token address"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        201:
+          description: "Created.A token network for the token has been successfully created"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  token_network_address:
+                    type: "string"
+        402:
+          description: "Payment Required. Insufficient ETH to pay for the gas of the register on-chain transaction"
+        404:
+          description: "Not Found. The given token address is invalid"
+        409:
+          description: "Conflict. The token was already registered before, or the registering transaction failed."
+        501:
+          description: "Not Implemented. Registering a token only works on testnet temporarily. On mainnet this error is returned."
+  /channels:
+    get:
+      tags:
+      - "channels"
+      summary: "Get a list of all unsettled channels"
+      description: "Get a list of all unsettled channels"
+      responses:
+        200:
+          description: "Successful query"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Channel"
+        500:
+          description: "Internal Server Error – Internal Raiden node error"
+    put:
+      tags:
+      - "channels"
+      summary: "Opens (i. e. creates) a channel"
+      description: "Opens (i. e. creates) a channel"
+      requestBody:
+        description: "Channel data payload"
+        content:
+          'application/json':
+            schema:
+              properties:
+                partner_address:
+                  type: "string"
+                  description: "The partner we want to open a channel with"
+                token_address:
+                  type: "string"
+                  description: "The token we want to be used in the channel"
+                total_deposit:
+                  type: "integer"
+                  format: "int264"
+                  description: "Total amount of tokens to be deposited to the channel"
+                settle_timeout:
+                  type: "integer"
+                  format: "int264"
+                  description: "The amount of blocks that the settle timeout should have"
+              required:
+                - "partner_address"
+                - "token_address"
+                - "total_deposit"
+                - "settle_timeout"
+      responses:
+        201:
+          description: "Created. Channel created successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Channel"
+        400:
+          description: "Bad Request. Provided JSON is in some way malformed"
+        402:
+           description: "Payment Required. Insufficient ETH to pay for the gas of the channel open on-chain transaction"
+        408:
+          description: "Request Timeout. Deposit event was not read in time by the Ethereum node"
+        409:
+          description: "Conflict. Invalid input, e. g. too low a settle timeout"
+        500:
+          description: "Internal Server Error. Internal Raiden node error"
+  /channels/{token_address}:
+    get:
+      tags:
+      - "channels"
+      summary: "Get a list of all unsettled channels for the given token address"
+      description: "Get a list of all unsettled channels for the given token address"
+      parameters:
+      - name: "token_address"
+        in: "path"
+        description: "Token address"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        200:
+          description: "Successful query"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Channel"
+        404:
+          description: "Not Found. The given token address is not a valid eip55-encoded Ethereum addres"
+        500:
+          description: "Internal Server Error. Internal Raiden node error"
+  /channels/{token_address}/{partner_address}:
+    get:
+      tags:
+      - "channels"
+      summary: "Query information about one of your channels"
+      description: "The channel is specified by the address of the token and the partner’s address."
+      parameters:
+      - name: "token_address"
+        in: "path"
+        description: "Token address"
+        required: true
+        schema:
+          type: "string"
+      - name: "partner_address"
+        in: "path"
+        description: "Token address"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        200:
+          description: "Successful query"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Channel"
+        404:
+          description: "Not Found. The given token address is not a valid eip55-encoded Ethereum addres or the channel does not exist"
+        500:
+          description: "Internal Server Error. Internal Raiden node error"
+    patch:
+      tags:
+      - "channel"
+      summary: "This request is used to close a channel or to increase the deposit in it"
+      description: "This request is used to close a channel or to increase the deposit in it"
+      requestBody:
+        description: "Channel data payload"
+        content:
+          'application/json':
+            schema:
+              type: "object"
+              properties:
+                state:
+                  description: "Desired new state; the only valid choice is 'closed'"
+                  type: "string"
+                  enum: [
+                    "closed"
+                  ]
+                total_deposit:
+                  description: "The increased total deposit"
+                  type: "string"
+                  enum: [
+                    "closed"
+                  ]
+      parameters:
+        - name: "partner_address"
+          in: "path"
+          description: "The partner we want to open a channel with"
+          required: true
+          schema:
+            type: "string"
+        - name: "token_address"
+          in: "path"
+          description: "The token we want to be used in the channel"
+          required: true
+          schema:
+            type: "string"
+      responses:
+          200:
+            description: "OK. Success"
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/Channel"
+          400:
+            description: "Bad Request. The provided JSON is in some way malformed, or there is nothing to do since neither state nor total_deposit have been given, or the value of state is not a valid channel state."
+          402:
+            description: "Payment Required. Insufficient balance to do a deposit, or insufficient ETH to pay for the gas of the on-chain transaction"
+          404:
+            description: "Payment Required. Insufficient balance to do a deposit, or insufficient ETH to pay for the gas of the on-chain transaction"
+          408:
+            description: "Request Timeout. Deposit event was not read in time by the Ethereum node"
+          409:
+            description: "Conflict. Provided channel does not exist or state and total_deposit have been attempted to update in the same request or attempt to deposit token amount lower than on-chain balance of the channel attempt to deposit more tokens than the testing limit"
+          500:
+            description: "Internal Server Error. Internal Raiden node error"
+  /tokens:
+    get:
+      tags:
+      - "tokens"
+      summary: "Returns a list of addresses of all registered tokens"
+      description: "Returns a list of addresses of all registered tokens"
+      responses:
+        200:
+          description: "Successful query"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  type: "string"
+        500:
+          description: "Internal Server Error. Internal Raiden node error"
+  /tokens/{token_address}/partners:
+    get:
+      tags:
+      - "partners"
+      summary: "Returns a list of all partners"
+      description: "Returns a list of all partners with whom you have non-settled channels for a certain token"
+      parameters:
+      - name: "token_address"
+        in: "path"
+        description: "Token address"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        200:
+          description: "Successful query"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  type: "object"
+                  properties:
+                    partner_address:
+                      type: "string"
+                      description: "The partner we have a channel with"
+                    channel:
+                      type: "string"
+                      description: "The partner we have a channel with"
+        300:
+          description: "Found. If the user accesses the channel link endpoint"
+        400:
+          description: "Not Found. The token does not exist the token address is not a valid eip55-encoded Ethereum address"
+        500:
+          description: "Internal Server Error. Internal Raiden node error"
+  /connections:
+    get:
+      tags:
+      - "connections"
+      summary: "Query details of all joined token networks"
+      description: "The request will return a JSON object where each key is a token address for which you have open channels"
+      responses:
+        200:
+          description: "OK. Success"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Connection"
+        500:
+          description: "Internal Server Error. Internal Raiden node error"
+  /connections/{token_address}:
+    put:
+      tags:
+      - "connections"
+      summary: "Automatically join a token network"
+      description: "The request will only return once all blockchain calls for opening and/or depositing to a channel have completed"
+      parameters:
+        - name: "token_address"
+          in: "path"
+          description: "Token address"
+          required: true
+          schema:
+            type: "string"
+      requestBody:
+        description: "Channel data payload"
+        content:
+          'application/json':
+            schema:
+              type: "object"
+              properties:
+                initial_channel_target:
+                  description: "Number of channels to open proactively"
+                  type: "string"
+                joinable_funds_target:
+                  description: "Fraction of funds that will be used to join channels opened by other participants"
+                  type: "number"
+                  format: "float"
+                funds:
+                  description: "Amount of funding you want to put into the network"
+                  type: "integer"
+                  format: "int264"
+      responses:
+        204:
+          description: "No Content. For a successful connection creation"
+        402:
+          description: "Payment Required. If any of the channel deposits fail due to insufficient ETH balance to pay for the gas of the on-chain transactions"
+        404:
+          description: "Not Found. The given token address is not a valid eip55-encoded Ethereum address"
+        408:
+          description: "Request Timeout. If a timeout happened during any of the transactions"
+        409:
+          description: "Conflict. If any of the provided input to the call is invalid"
+        500:
+          description: "Internal Server Error. Internal Raiden node error"
+    delete:
+      tags:
+      - "connections"
+      summary: "Leave a token network"
+      description: "The request will only return once all blockchain calls for closing/settling a channel have completed"
+      parameters:
+        - name: "token_address"
+          in: "path"
+          description: "The partner we want to open a channel with"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        200:
+          description: "OK. For successfully leaving a token network"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                description: "The response is a list with the addresses of all closed channels"
+                items:
+                  type: "string"
+        404:
+          description: "Not Found. The given token address is not a valid eip55-encoded Ethereum address"
+        500:
+          description: "Internal Server Error. Internal Raiden node error"
+  /payments:
+    get:
+      tags:
+      - "payments"
+      summary: "Query the payment history"
+      description: "This includes successful (EventPaymentSentSuccess) and failed (EventPaymentSentFailed) sent payments as well as received payments (EventPaymentReceivedSuccess)"
+      responses:
+        200:
+          description: "OK. For successful query"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/PaymentEvent"
+        404:
+          description: "Not Found – The given token and / or partner addresses are not valid eip55-encoded Ethereum addresses"
+        409:
+          description: "Conflict – If the given block number or token_address arguments are invalid"
+        500:
+          description: "Internal Server Error. Internal Raiden node error"
+  /payments/{token_address}:
+    get:
+      tags:
+      - "payments"
+      summary: "Query the payment history"
+      description: "This includes successful (EventPaymentSentSuccess) and failed (EventPaymentSentFailed) sent payments as well as received payments (EventPaymentReceivedSuccess)"
+      parameters:
+        - name: "token_address"
+          in: "path"
+          description: "Token address"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        200:
+          description: "OK. For successful query"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/PaymentEvent"
+        404:
+          description: "Not Found – The given token and / or partner addresses are not valid eip55-encoded Ethereum addresses"
+        409:
+          description: "Conflict – If the given block number or token_address arguments are invalid"
+        500:
+          description: "Internal Server Error. Internal Raiden node error"
+  /payments/{token_address}/{target_address}:
+    post:
+      tags:
+      - "payments"
+      summary: "Initiate a payment."
+      description: "The request will only return once the payment either succeeded or failed"
+      parameters:
+        - name: "token_address"
+          in: "path"
+          description: "Token address"
+          required: true
+          schema:
+            type: "string"
+        - name: "target_address"
+          in: "path"
+          description: "The partner we want to open a channel with"
+          required: true
+          schema:
+            type: "string"
+      requestBody:
+        description: "Channel data payload"
+        content:
+          'application/json':
+            schema:
+              type: "object"
+              properties:
+                amount:
+                  description: "Amount to be sent to the target"
+                  type: "integer"
+                  format: "int256"
+                identifier:
+                  description: "Identifier of the payment"
+                  type: "integer"
+                  format: "int256"
+              required:
+                - amount
+      responses:
+        200:
+          description: "OK. Successful payment"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  initiator_address:
+                    type: "string"
+                  target_address:
+                    type: "string"
+                  token_address:
+                    type: "string"
+                  amount:
+                    type: "integer"
+                    format: "int256"
+                  identifier:
+                    type: "integer"
+                    format: "int256"
+        400:
+          description: "Bad Request – If the provided json is in some way malformed"
+        402:
+          description: "Payment Required – If the payment can’t start due to insufficient balance"
+        404:
+          description: "Not Found – The given token and / or target addresses are not valid eip55-encoded Ethereum addresses"
+        408:
+          description: "Request Timeout – If a timeout happened during the payment"
+        409:
+          description: "Conflict – If the address or the amount is invalid or if there is no path to the target, or if the identifier is already in use for a different payment"
+        500:
+          description: "Internal Server Error. Internal Raiden node error"
+    get:
+      tags:
+      - "payments"
+      summary: "Query the payment history"
+      description: "This includes successful (EventPaymentSentSuccess) and failed (EventPaymentSentFailed) sent payments as well as received payments (EventPaymentReceivedSuccess)"
+      parameters:
+        - name: "token_address"
+          in: "path"
+          description: "Token address"
+          required: true
+          schema:
+            type: "string"
+        - name: "target_address"
+          in: "path"
+          description: "Token address"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        200:
+          description: "OK. For successful query"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/PaymentEvent"
+        404:
+          description: "Not Found – The given token and / or partner addresses are not valid eip55-encoded Ethereum addresses"
+        409:
+          description: "Conflict – If the given block number or token_address arguments are invalid"
+        500:
+          description: "Internal Server Error. Internal Raiden node error"
+  /_debug/blockchain_events/network:
+    get:
+      tags:
+      - "events"
+      summary: "Query for token network creations"
+      description: "Query for token network creations"
+      parameters:
+        - name: "from_block"
+          in: "query"
+          description: "From block"
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "to_block"
+          in: "query"
+          description: "To block"
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "limit"
+          in: "query"
+          description: "Limit results"
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "offset"
+          in: "query"
+          description: "Offset"
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        200:
+          description: "OK. For successful query"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  type: "object"
+                  properties:
+                    args:
+                      type: "object"
+                      properties:
+                        token_address:
+                          type: "string"
+                        token_network_address:
+                          type: "string"
+                    event:
+                      type: "string"
+                    logIndex:
+                      type: "integer"
+                      format: "int64"
+                    transactionIndex:
+                      type: "integer"
+                      format: "int64"
+                    transactionHash:
+                      type: "string"
+                    address:
+                      type: "string"
+                    blockHash:
+                      type: "string"
+                    block_number:
+                      type: "integer"
+                      format: "int64"
+        400:
+          description: "Bad Request – If the provided json is in some way malformed"
+        409:
+          description: "Conflict – If the given block number argument is invalid"
+        500:
+          description: "Internal Server Error. Internal Raiden node error"
+  /_debug/blockchain_events/tokens/{token_address}:
+    get:
+      tags:
+      - "events"
+      summary: "Query for token network creations"
+      description: "Query for token network creations"
+      parameters:
+        - name: "token_address"
+          in: "path"
+          description: "Token address"
+          required: true
+          schema:
+            type: "string"
+        - name: "from_block"
+          in: "query"
+          description: "From block"
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "to_block"
+          in: "query"
+          description: "To block"
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "limit"
+          in: "query"
+          description: "Limit results"
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "offset"
+          in: "query"
+          description: "Offset"
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        200:
+          description: "OK. For successful query"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  type: "object"
+                  properties:
+                    args:
+                      type: "object"
+                      properties:
+                        token_address:
+                          type: "string"
+                        token_network_address:
+                          type: "string"
+                    event:
+                      type: "string"
+                    logIndex:
+                      type: "integer"
+                      format: "int64"
+                    transactionIndex:
+                      type: "integer"
+                      format: "int64"
+                    transactionHash:
+                      type: "string"
+                    address:
+                      type: "string"
+                    blockHash:
+                      type: "string"
+                    block_number:
+                      type: "integer"
+                      format: "int64"
+        404:
+          description: "Not Found – The given token address is not a valid eip55-encoded Ethereum address or does not exist"
+        409:
+          description: "Conflict – If the given block number or token_address arguments are invalid"
+        500:
+          description: "Internal Server Error. Internal Raiden node error"
+  /_debug/blockchain_events/payment_network/{token_address}/channels/{partner_address}:
+    get:
+      tags:
+      - "events"
+      summary: "Query for blockchain_events"
+      description: "Query for blockchain_events tied to all the channels which are part of the token network. If the partner_address is not provided it will show the events for all the channels"
+      parameters:
+        - name: "token_address"
+          in: "path"
+          description: "Token address"
+          required: true
+          schema:
+            type: "string"
+        - name: "partner_address"
+          in: "path"
+          description: "Partner address"
+          required: true
+          schema:
+            type: "string"
+        - name: "from_block"
+          in: "query"
+          description: "From block"
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "to_block"
+          in: "query"
+          description: "To block"
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "limit"
+          in: "query"
+          description: "Limit results"
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "offset"
+          in: "query"
+          description: "Offset"
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        200:
+          description: "OK. For successful query"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  type: "object"
+                  properties:
+                    args:
+                      type: "object"
+                      properties:
+                        channel_identifier:
+                          type: "string"
+                        participant1_amount:
+                          type: "integer"
+                          format: "int64"
+                        participant2_amount:
+                          type: "integer"
+                          format: "int64"
+                    event:
+                      type: "string"
+                    logIndex:
+                      type: "integer"
+                      format: "int64"
+                    transactionIndex:
+                      type: "integer"
+                      format: "int64"
+                    transactionHash:
+                      type: "string"
+                    address:
+                      type: "string"
+                    blockHash:
+                      type: "string"
+                    block_number:
+                      type: "integer"
+                      format: "int64"
+        404:
+          description: "Not Found – The given token and / or partner addresses are not valid eip55-encoded Ethereum addresses, or the channel for the given partner does not exist"
+        409:
+          description: "Conflict – If the given block number argument is invalid"
+        500:
+          description: "Internal Server Error. Internal Raiden node error"
+  /_debug/raiden_events:
+    get:
+      tags:
+      - "events"
+      summary: "Query for Raiden internal node events"
+      description: "Query for Raiden internal node events"
+      responses:
+        200:
+          description: "OK. For successful query"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  type: "object"
+        500:
+          description: "Internal Server Error. Internal Raiden node error"
+components:
+  schemas:
+    Channel:
+      type: "object"
+      properties:
+        token_network_identifier:
+          type: "string"
+        channel_identifier:
+          type: "integer"
+          format: "int264"
+        partner_address:
+          type: "string"
+        token_address:
+          type: "string"
+        balance:
+          type: "integer"
+          format: "int264"
+        total_deposit:
+          type: "integer"
+          format: "int264"
+        state:
+          type: "string"
+          description: "Channel Status"
+          enum:
+          - "opened"
+          - "closed"
+          - "settled"
+        settle_timeout:
+          type: "integer"
+          format: "int264"
+        reveal_timeout:
+          type: "integer"
+          format: "int264"
+      xml:
+        name: "Channel"
+    Connection:
+      type: "object"
+      properties: {}
+    PaymentEvent:
+      type: "object"
+      properties:
+        event:
+          type: "string"
+        amount:
+          type: "integer"
+          format: "int64"
+        initiator:
+          type: "string"
+        identifier:
+          type: "integer"
+          format: "int64"
