@@ -1,6 +1,6 @@
-# ETHSingapore Hackathon Raiden Network guide
+# Raiden Network Hackathon guide
 
-This is the repo for the Raiden Network at the ETHSingapore hackathon.
+This is the repo for the Raiden Network hackathon workshop in Darmstadt.
 Below you'll find a list of links and information needed to get going with Raiden for the hackathon.
 
 ### Prerequisites:
@@ -9,7 +9,7 @@ Below you'll find a list of links and information needed to get going with Raide
 - A Kovan account and KETH. We've created a small tool that generates an account and sends KETH and tokens to it with just one simple command. Please see the [onboarding section](#on-boarding) below for instructions.
 - The Raiden client itself. Please see the [getting Raiden](#getting-raiden) section below.
   - If you're on Windows we recommend that you install Raiden for Windows Subsystem for Linux (WSL)
-- We have created [a gitter room](https://gitter.im/raiden-network/eth-singapore-hackathon) that you can use for asking questions or find out where you can find us if you need help or want to discuss something face-to-face.
+- We have created [a gitter room](https://gitter.im/raiden-network-darmstadt-hackathon) that you can use for asking questions or find out where you can find us if you need help or want to discuss something face-to-face.
 
 ### On-boarding:
 We've created a simple script that generates a keystore / address and sends Kovan ETH and ETHSingaporeTokens to the generated address. Follow these simple steps:
@@ -72,7 +72,7 @@ Once Raiden is installed it's time to fire it up. This is done with the followin
     --keystore-path keystore \
     --network-id kovan \
     --environment-type development \
-    --eth-rpc-endpoint https://kovan.infura.io/v3/YOUR_INFURA_TOKEN
+    --eth-rpc-endpoint https://kovan.infura.io/v4/YOUR_INFURA_TOKEN
 ```
 
 The node will ask you to accept the disclaimer and then ask you to choose which address you want to use. The list should only contain the one address the onboarder tool generated for you.
@@ -84,8 +84,8 @@ You can now access the WebUI at [http://localhost:5001/](http://localhost:5001).
 
 #### Tell the rest
 
-You should now have running Raiden node. From here you can join the ETHSingaporeTokens network. We recommend posting your address in the gitter channel if you want to try it out with someone else hacking on Raiden.
-You can also check out how the network is growing by checking out the [Raiden Explorer](https://kovan.explorer.raiden.network/tokens/0x98a345f06e3A5DFe28EE0af38dd0780b4C0ed73B) for the ETHSingaporeToken.
+You should now have running Raiden node. From here you can join the Darmstadt-Hackathon-TokenETHSingaporeTokens network. We recommend posting your address in the gitter channel if you want to try it out with someone else hacking on Raiden.
+You can also check out how the network is growing by checking out the [Raiden Explorer](https://kovan.explorer.raiden.network/tokens/0x98a345f06e3A5DFe28EE0af38dd0780b4C0ed73B) for the ETHDarmstadtToken.
 
 ### API commands:
 
