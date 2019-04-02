@@ -1,30 +1,32 @@
-from gevent.monkey import patch_all
-patch_all()
+from gevent.monkey import patch_all  # isort:skip # noqa
+patch_all()  # isort:skip # noqa
 
 import json
 import os
 import time
 from datetime import datetime
+from typing import Set, Union
 
 import click
 import structlog
 from eth_utils import encode_hex, is_address, to_checksum_address
 from flask import Flask, Response, request
 from gunicorn.app.base import BaseApplication
-from raiden.accounts import Account
-from raiden.log_config import configure_logging
-from raiden.network.rpc.client import JSONRPCClient, check_address_has_code
-from raiden.network.rpc.smartcontract_proxy import ContractProxy
-from raiden_contracts.constants import CONTRACT_CUSTOM_TOKEN
-from raiden_contracts.contract_manager import ContractManager, contracts_precompiled_path
 from redis import StrictRedis
 from web3 import HTTPProvider, Web3
 from web3.gas_strategies.time_based import fast_gas_price_strategy
 
+from raiden.accounts import Account
+from raiden.log_config import configure_logging
+from raiden.network.rpc.client import JSONRPCClient, check_address_has_code
+from raiden.network.rpc.smartcontract_proxy import ContractProxy
+from raiden.utils.typing import TransactionHash
+from raiden_contracts.constants import CONTRACT_CUSTOM_TOKEN
+from raiden_contracts.contract_manager import ContractManager, contracts_precompiled_path
 
 REDIS_KEY_KNOWN_ADDR = 'onboarding:known_addr'
 REDIS_KEY_KNOWN_CLIENT = 'onboarding:known_client'
-log = structlog.get_logger(__name__)
+log = structlog.get_logger('onboarding_server')
 
 
 class GunicornApplication(BaseApplication):
@@ -49,14 +51,18 @@ def _get_token_ctr(client, token_address) -> ContractProxy:
     return client.new_contract_proxy(token_contract['abi'], token_address)
 
 
-def wait_for_txs(client_or_web3, txhashes, timeout=360):
+def wait_for_txs(
+        client_or_web3: Union[Web3, JSONRPCClient],
+        txhashes: Set[TransactionHash],
+        timeout: int = 360,
+):
     if isinstance(client_or_web3, Web3):
         web3 = client_or_web3
     else:
         web3 = client_or_web3.web3
     start = time.monotonic()
     outstanding = False
-    txhashes = txhashes[:]
+    txhashes = set(txhashes)
     while txhashes and time.monotonic() - start < timeout:
         remaining_timeout = timeout - (time.monotonic() - start)
         if outstanding != len(txhashes) or int(remaining_timeout) % 10 == 0:
@@ -66,9 +72,12 @@ def wait_for_txs(client_or_web3, txhashes, timeout=360):
                 outstanding=outstanding,
                 timeout_remaining=int(remaining_timeout),
             )
-        for txhash in txhashes[:]:
-            tx = web3.eth.getTransaction(txhash)
+        for txhash in txhashes.copy():
+            tx = web3.eth.getTransactionReceipt(txhash)
             if tx and tx['blockNumber'] is not None:
+                status = tx.get('status')
+                if status is not None and status == 0:
+                    raise RuntimeError(f"Transaction {encode_hex(txhash)} failed.")
                 txhashes.remove(txhash)
             time.sleep(.1)
         time.sleep(1)
@@ -84,14 +93,19 @@ def wait_for_txs(client_or_web3, txhashes, timeout=360):
 @click.password_option('--password', envvar='ACCOUNT_PASSWORD', required=True)
 @click.option('--eth-rpc-url', required=True)
 @click.option('--token-address', required=True)
-@click.option('--bind-addr', default='127.0.0.1:8088')
+@click.option('--bind-addr', default='127.0.0.1:8088', show_default=True)
 @click.option('--public-url')
-@click.option('--redis-host', default='localhost')
-@click.option('--redis-port', default=6379)
-@click.option('--faucet-amount-eth', default=5 * 10 ** 17)
-@click.option('--faucet-amount-tokens', default=100 * 10 ** 18)
-@click.option('--faucet-timeout', default=3600)
-@click.option('--log-path', default=os.getcwd(), type=click.Path(file_okay=False, dir_okay=True, exists=True))
+@click.option('--redis-host', default='localhost', show_default=True)
+@click.option('--redis-port', default=6379, show_default=True)
+@click.option('--faucet-amount-eth', default=5 * 10 ** 17, show_default=True)
+@click.option('--faucet-amount-tokens', default=100 * 10 ** 18, show_default=True)
+@click.option('--faucet-timeout', default=3600, show_default=True)
+@click.option(
+    '--log-path',
+    default=os.getcwd(),
+    type=click.Path(file_okay=False, dir_okay=True, exists=True),
+)
+@click.option('--tx-timeout', default=360, show_default=True)
 def main(
     keystore_file,
     password,
@@ -105,6 +119,7 @@ def main(
     faucet_amount_tokens,
     faucet_timeout,
     log_path,
+    tx_timeout,
 ):
     log_file_name = f'onboarding-server.{datetime.now().isoformat()}.log'
     log_file_name = os.path.join(log_path, log_file_name)
@@ -155,28 +170,47 @@ def main(
     def faucet():
         if not request.json:
             log.info('Invlid request', remote=request.remote_addr)
-            return Response('Invalid request', 406)
+            return Response(
+                '{"result": "error", "error": "Invalid request"}',
+                status=406,
+                content_type='application/json',
+            )
         address = request.json.get('address')
         client_hash = request.json.get('client_hash')
         if not address or not is_address(address) or not client_hash:
             log.info('Invlid request.', remote=request.remote_addr, address=address, client_hash=client_hash)
-            return Response('Invalid request. address or client_hash missing.', 406)
+            return Response(
+                '{"result": "error", "error": "Invalid request. address or client_hash missing."}',
+                status=406,
+                content_type='application/json',
+            )
         address = to_checksum_address(address)
         address_key = f'{REDIS_KEY_KNOWN_ADDR}:{address}'
         client_key = f'{REDIS_KEY_KNOWN_CLIENT}:{client_hash}'
         if redis.get(address_key) is not None or redis.get(client_key) is not None:
             log.info('Quota exceeded', address=address, client_hash=client_hash)
-            return Response('{"result": "error", "error": "quota exceeded"}', 429, content_type='application/json')
+            return Response(
+                '{"result": "error", "error": "quota exceeded"}',
+                status=429,
+                content_type='application/json',
+            )
         log.info('Fauceting', target=address)
-        txhashes = [
+        txhashes = {
             client.send_transaction(address, faucet_amount_eth),
             token_ctr.transact('mintFor', faucet_amount_tokens, address)
-        ]
-        wait_for_txs(client, txhashes)
+        }
+        try:
+            wait_for_txs(client, txhashes, timeout=tx_timeout)
+        except RuntimeError as ex:
+            return Response(
+                json.dumps({'result': 'error', 'error': str(ex)}),
+                status=503,
+                content_type='application/json',
+            )
         log.info('Successfully fauceted', address=address)
         redis.set(address_key, '1', ex=faucet_timeout)
         redis.set(client_key, '1', ex=faucet_timeout)
-        return Response('{"result": "success"}')
+        return Response('{"result": "success"}', content_type='application/json')
 
     GunicornApplication(app, {'bind': bind_addr, 'worker_class': 'gevent'}).run()
 

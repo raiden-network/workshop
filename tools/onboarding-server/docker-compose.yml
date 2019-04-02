@@ -24,6 +24,8 @@ services:
       - "redis"
       - "--log-path"
       - "/log"
+      - "--tx-timeout"
+      - "${TX_TIMEOUT}"
     labels:
       - "traefik.enable=true"
       - "traefik.port=80"
