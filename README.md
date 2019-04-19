@@ -5,7 +5,7 @@ Below you'll find a list of links and information needed to get going with Raide
 
 ### Prerequisites:
 - Access to an Ethereum Goerli RPC endpoint
-    - We recommend using Goerli and running your own local node for the hackathon!
+    - We recommend using (Goerli)[https://mudit.blog/getting-started-goerli-testnet/]and running your own local node for the hackathon!
     - For example through [Infura](https://infura.io/login)
 - A Goerli account and Goerli ETH. We've created a small tool that generates an account and sends Goerli ETH and tokens to it with just one simple command. Please see the [onboarding section](#on-boarding) below for instructions.
 - The Raiden client itself. Please see the [getting Raiden](#getting-raiden) section below.
