@@ -74,7 +74,7 @@ Goerli:
     --keystore-path keystore \
     --network-id 5 \
     --environment-type development \
-    --eth-rpc-endpoint https://localhost:8545
+    --eth-rpc-endpoint http://localhost:8545
 ```
 NB: Since Goerli takes less than 10 minutes to sync, it's highly recommended to just use that locally
 
