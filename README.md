@@ -13,7 +13,9 @@ Below you'll find a list of links and information needed to get going with Raide
 - We have created [a gitter room](https://gitter.im/raiden-network/eth-capetown-hackathon) that you can use for asking questions or find out where you can find us if you need help or want to discuss something face-to-face.
 
 ### On-boarding:
-We've created a simple script that generates a keystore / address and sends Goerli ETH and ETHCapeTownTokens to the generated address. Follow these simple steps:
+We've created a simple script that generates a keystore / address and sends Goerli ETH and ETHCapeTownTokens to the generated address. 
+You can see the source code of the script [here](https://github.com/raiden-network/workshop/tree/eth_cape_town/tools/onboarder)
+Follow these simple steps:
 
 #### macOS instructions
 - Download the onboarder [macOS binary](https://raiden-nightlies.ams3.digitaloceanspaces.com/onboarder-macOS.zip):
