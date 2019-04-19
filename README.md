@@ -1,20 +1,19 @@
-# ETHSingapore Hackathon Raiden Network guide
+# ETHCapeTown Hackathon Raiden Network guide
 
 This is the repo for the Raiden Network at the ETHCapeTown hackathon.
 Below you'll find a list of links and information needed to get going with Raiden for the hackathon.
 
 ### Prerequisites:
-- Access to an Ethereum Kovan or Goerli RPC endpoint
+- Access to an Ethereum Goerli RPC endpoint
+    - We recommend using Goerli and running your own local node for the hackathon!
     - For example through [Infura](https://infura.io/login)
-- A Kovan account and Kovan ETH. We've created a small tool that generates an account and sends Kovan ETH and tokens to it with just one simple command. Please see the [onboarding section](#on-boarding) below for instructions.
-or
 - A Goerli account and Goerli ETH. We've created a small tool that generates an account and sends Goerli ETH and tokens to it with just one simple command. Please see the [onboarding section](#on-boarding) below for instructions.
 - The Raiden client itself. Please see the [getting Raiden](#getting-raiden) section below.
   - If you're on Windows we recommend that you install Raiden for Windows Subsystem for Linux (WSL)
 - We have created [a gitter room](https://gitter.im/raiden-network/eth-capetown-hackathon) that you can use for asking questions or find out where you can find us if you need help or want to discuss something face-to-face.
 
 ### On-boarding:
-We've created a simple script that generates a keystore / address and sends Kovan or Goerli ETH and ETHCapeTownTokens to the generated address. Follow these simple steps:
+We've created a simple script that generates a keystore / address and sends Goerli ETH and ETHCapeTownTokens to the generated address. Follow these simple steps:
 
 #### macOS instructions
 - Download the onboarder [macOS binary](https://raiden-nightlies.ams3.digitaloceanspaces.com/onboarder-macOS.zip):
@@ -70,20 +69,11 @@ Goerli:
 ```sh
 ./raiden-binary \
     --keystore-path keystore \
-    --network-id kovan \
+    --network-id 5 \
     --environment-type development \
     --eth-rpc-endpoint https://localhost:8545
 ```
 NB: Since Goerli takes less than 10 minutes to sync, it's highly recommended to just use that locally
-
-Kovan:
-```sh
-./raiden-binary \
-    --keystore-path keystore \
-    --network-id kovan \
-    --environment-type development \
-    --eth-rpc-endpoint https://kovan.infura.io/v3/YOUR_INFURA_TOKEN
-```
 
 The node will ask you to accept the disclaimer and then ask you to choose which address you want to use. The list should only contain the one address the onboarder tool generated for you.
 
@@ -95,7 +85,7 @@ You can now access the WebUI at [http://localhost:5001/](http://localhost:5001).
 #### Tell the rest
 
 You should now have running Raiden node. From here you can join the ETHCapeTownToken network. We recommend posting your address in the gitter channel if you want to try it out with someone else hacking on Raiden.
-You can also check out how the network is growing by checking out the [Goerli Raiden Explorer](https://goerli.explorer.raiden.network/tokens/TODO) or the [Kovan Raiden Explorer](https://kovan.explorer.raiden.network/tokens/TODO) for the ETHCapeTownToken.
+You can also check out how the network is growing by checking out the [Goerli Raiden Explorer](https://goerli.explorer.raiden.network/tokens/0x396764f15ed1467883A9a5B7D42AcFb788CD1826) for the ETHCapeTownToken.
 
 ### API commands (Goerli):
 
@@ -133,6 +123,5 @@ Feel free to change the amounts of the payments.
 - [API documentation](https://raiden-network.readthedocs.io/en/latest/rest_api.html)
 - [Raiden installation instructions](https://raiden-network.readthedocs.io/en/latest/overview_and_guide.html#installation)
 - [Getting Started with Raiden API](https://raiden-network.readthedocs.io/en/latest/api_walkthrough.html)
-- (Goerli)[ETHCapeTownToken](https://kovan.etherscan.io/address/0x396764f15ed1467883A9a5B7D42AcFb788CD1826#code)
-- (Kovan)[ETHCapeTownToken](https://kovan.etherscan.io/address/0x60FACD5CAaF91dA129112793e0Fee78eE22efdD8#code)
+- (Goerli)[ETHCapeTownToken](https://goerli.etherscan.io/address/0x396764f15ed1467883A9a5B7D42AcFb788CD1826#code)
 - [Hackathon Gitter Room](https://gitter.im/raiden-network/eth-capetown-hackathon)
