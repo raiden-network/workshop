@@ -83,7 +83,7 @@ The node will ask you to accept the disclaimer and then ask you to choose which 
 It will take a bit of time for the node to finish launching.
 You'll see that it's ready once you see the message stating that the Rest-API has been started.
 
-You can now access the WebUI at [http://localhost:5001/](http://localhost:5001).
+You can now access the WebUI at [http://127.0.0.1:5001/](http://127.0.0.1:5001).
 
 #### Tell the rest
 
