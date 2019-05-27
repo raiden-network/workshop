@@ -155,11 +155,17 @@ def main(
             <body>
             <div style="float:left; width: 80%">
                 <h1>Raiden @ DAppNode</h1>
-                <h2>{token_ctr.contract.call().name()}</h2>
             </div>
             <div style="float:right; width: 20%">
                 <img src="https://raiden.network/assets/logo-black.png" />
-            </div> 
+            </div>
+            <br style="overflow: hidden;"/>
+            <p>
+                Token: 
+                <a href="https://goerli.etherscan.io/address/{to_checksum_address(token_ctr.contract_address)}">
+                    {token_ctr.contract.call().name()} ({to_checksum_address(token_ctr.contract_address)})
+                </a>
+            </p>
         '''
 
     @app.route('/', methods=['POST'])
