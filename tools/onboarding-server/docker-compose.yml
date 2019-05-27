@@ -5,8 +5,8 @@ services:
     build: .
     restart: always
     volumes:
-      - /etc/onboarding_server:/config
-      - /var/log/onboarding_server:/log
+      - ${CONFIG_DIR:-/etc/onboarding_server}:/config
+      - ${LOG_DIR:-/var/log/onboarding_server}:/log
     command:
       - "--keystore-file"
       - "/config/keystore"
