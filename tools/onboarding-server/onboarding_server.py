@@ -152,18 +152,14 @@ def main(
     def index():
         return f'''
             <html>
-            <body style=" background: linear-gradient(90deg, #fca09a, #fcccd3, #ffcc9d, #98ddad, #81d7ec, #a0aaed);">
+            <body>
             <div style="float:left; width: 80%">
-                <h1>Raiden Hands on Workshop @ devcon iv</h1>
-                <h2>Kovan ETH & {token_ctr.contract.call().name()} faucet</h2>
+                <h1>Raiden @ DAppNode</h1>
+                <h2>{token_ctr.contract.call().name()}</h2>
             </div>
             <div style="float:right; width: 20%">
                 <img src="https://raiden.network/assets/logo-black.png" />
             </div> 
-            <p style="clear: both; overflow: hidden;">
-                To request KETH and tokens send a <code>POST</code> request to <code>{public_url}</code> with a JSON body
-                containing <code>{{"address": "&lt;eth-address&gt;", "client_hash": "&lt;client-auth-hash&gt;"}}</code>.
-            </p>
         '''
 
     @app.route('/', methods=['POST'])
