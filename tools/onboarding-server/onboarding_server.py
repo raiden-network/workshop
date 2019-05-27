@@ -97,9 +97,9 @@ def wait_for_txs(
 @click.option('--public-url')
 @click.option('--redis-host', default='localhost', show_default=True)
 @click.option('--redis-port', default=6379, show_default=True)
-@click.option('--faucet-amount-eth', default=5 * 10 ** 17, show_default=True)
-@click.option('--faucet-amount-tokens', default=100 * 10 ** 18, show_default=True)
-@click.option('--faucet-timeout', default=3600, show_default=True)
+@click.option('--faucet-amount-eth', default=1 * 10 ** 17, show_default=True)
+@click.option('--faucet-amount-tokens', default=1000 * 10 ** 18, show_default=True)
+@click.option('--faucet-timeout', default=60 * 60 * 24 * 7, show_default=True)
 @click.option(
     '--log-path',
     default=os.getcwd(),
