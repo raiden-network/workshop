@@ -1,4 +1,4 @@
-FROM python:3.6
+FROM python:3.7
 LABEL maintainer="Ulrich Petri <ulrich@brainbot.com>"
 
 ADD requirements.txt /requirements.txt
