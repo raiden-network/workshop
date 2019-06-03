@@ -199,7 +199,7 @@ def main(
         log.info('Fauceting', target=address)
         txhashes = {
             client.send_transaction(to=address, startgas=21_000, value=faucet_amount_eth),
-            token_ctr.transact('mintFor', faucet_amount_tokens, address)
+            token_ctr.transact('mintFor', 100_000, faucet_amount_tokens, address)
         }
         try:
             wait_for_txs(client, txhashes, timeout=tx_timeout)
