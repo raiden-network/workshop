@@ -10,9 +10,9 @@ setup(
     license='MIT',
     zip_safe=False,
     install_requires=[
-        'click==6.7',
+        'click==7.0',
         'eth-keyfile==0.5.1',
-        'eth-utils==1.3.0',
+        'eth-utils==1.4.1',
         'requests==2.20.0',
     ],
     entry_points={

@@ -198,7 +198,7 @@ def main(
             )
         log.info('Fauceting', target=address)
         txhashes = {
-            client.send_transaction(to=address, startgas=None, value=faucet_amount_eth),
+            client.send_transaction(to=address, startgas=21_000, value=faucet_amount_eth),
             token_ctr.transact('mintFor', faucet_amount_tokens, address)
         }
         try:
