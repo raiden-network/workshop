@@ -12,7 +12,7 @@ setup(
     install_requires=[
         'click==6.7',
         'eth-keyfile==0.5.1',
-        'eth-utils==1.2.1',
+        'eth-utils==1.3.0',
         'requests==2.20.0',
     ],
     entry_points={
