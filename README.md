@@ -12,7 +12,7 @@ Below you'll find a list of links and information needed to get going with Raide
 - We have created [a gitter room](https://gitter.im/raiden-network/FIXME) #FIXME# that you can use for asking questions or find out where you can find us if you need help or want to discuss something face-to-face.
 
 ### On-boarding:
-We've created a simple script that generates a keystore / address and sends Görli ETH and ETHSingaporeTokens to the generated address. Follow these simple steps:
+We've created a simple script that generates a keystore / address and sends Görli ETH and TUBERLINBlockchainlabs to the generated address. Follow these simple steps:
 
 #### macOS instructions
 - Download the onboarder [macOS binary](https://raiden-nightlies.ams3.digitaloceanspaces.com/onboarder-macOS.zip):
@@ -123,5 +123,4 @@ Feel free to change the amounts of the payments.
 - [API documentation](https://raiden-network.readthedocs.io/en/latest/rest_api.html)
 - [Raiden installation instructions](https://raiden-network.readthedocs.io/en/latest/overview_and_guide.html#installation)
 - [Getting Started with Raiden API](https://raiden-network.readthedocs.io/en/latest/api_walkthrough.html)
-- [ETHSingaporeToken](https://goerli.etherscan.io/address/0x9B740B496dea54d747680e941921aD28BDA5789C#code)
-- [Hackathon Gitter Room](https://gitter.im/raiden-network/eth-singapore-hackathon)
+- [TUBerlinToken](https://goerli.etherscan.io/address/0x9B740B496dea54d747680e941921aD28BDA5789C#code)
