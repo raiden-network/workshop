@@ -83,7 +83,7 @@ You can now access the WebUI at [http://localhost:5001/](http://localhost:5001).
 
 #### Tell the rest
 
-You should now have running Raiden node. From here you can join the TUBERLINBlockchainlabs token network. We recommend posting your address in the gitter channel if you want to try it out with someone else hacking on Raiden.
+You should now have running Raiden node. From here you can join the TUBERLINBlockchainlabs token network.
 You can also check out how the network is growing by checking out the [Raiden Explorer](https://goerli.explorer.raiden.network/tokens/0x9B740B496dea54d747680e941921aD28BDA5789C) for the TUBERLINBlockchainlabs token.
 
 ### API commands:
