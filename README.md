@@ -12,7 +12,7 @@ Below you'll find a list of links and information needed to get going with Raide
 - We have created [a gitter room](https://gitter.im/raiden-network/FIXME) #FIXME# that you can use for asking questions or find out where you can find us if you need help or want to discuss something face-to-face.
 
 ### On-boarding:
-We've created a simple script that generates a keystore / address and sends Kovan ETH and ETHSingaporeTokens to the generated address. Follow these simple steps:
+We've created a simple script that generates a keystore / address and sends Görli ETH and ETHSingaporeTokens to the generated address. Follow these simple steps:
 
 #### macOS instructions
 - Download the onboarder [macOS binary](https://raiden-nightlies.ams3.digitaloceanspaces.com/onboarder-macOS.zip):
@@ -70,7 +70,7 @@ Once Raiden is installed it's time to fire it up. This is done with the followin
 ```sh
 ./raiden-binary \
     --keystore-path keystore \
-    --network-id kovan \
+    --network-id goerli \
     --environment-type development \
     --eth-rpc-endpoint https://goerli.infura.io/v3/YOUR_INFURA_TOKEN
 ```
