@@ -9,7 +9,6 @@ Below you'll find a list of links and information needed to get going with Raide
 - A Görli account and göETH. We've created a small tool that generates an account and sends göETH and tokens to it with just one simple command. Please see the [onboarding section](#on-boarding) below for instructions.
 - The Raiden client itself. Please see the [getting Raiden](#getting-raiden) section below.
   - If you're on Windows we recommend that you install Raiden for Windows Subsystem for Linux (WSL)
-- We have created [a gitter room](https://gitter.im/raiden-network/FIXME) #FIXME# that you can use for asking questions or find out where you can find us if you need help or want to discuss something face-to-face.
 
 ### On-boarding:
 We've created a simple script that generates a keystore / address and sends Görli ETH and TUBERLINBlockchainlabs to the generated address. Follow these simple steps:
