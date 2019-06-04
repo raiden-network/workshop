@@ -11,7 +11,7 @@ Below you'll find a list of links and information needed to get going with Raide
   - If you're on Windows we recommend that you install Raiden for Windows Subsystem for Linux (WSL)
 
 ### On-boarding:
-We've created a simple script that generates a keystore / address and sends Görli ETH and TUBERLINBlockchainlabs to the generated address. Follow these simple steps:
+We've created a simple script that generates a keystore / address and sends Görli ETH and TUBERLINBlockchainlabs-Tokens to the generated address. Follow these simple steps:
 
 #### macOS instructions
 - Download the onboarder [macOS binary](https://raiden-nightlies.ams3.digitaloceanspaces.com/onboarder-macOS.zip):
