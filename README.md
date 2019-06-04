@@ -48,7 +48,7 @@ The fastest way to get up and running is to use the latest stable binary release
 #### macOS instructions
 - Download the [latest stable macOS binary](https://raiden-nightlies.ams3.digitaloceanspaces.com/raiden-v0.100.3-macOS-x86_64.zip):
 ```sh
-curl -O https://raiden-nightlies.ams3.digitaloceanspaces.com/raiden-v0.100.3-macOS-x86_64.zip
+curl -L -O https://raiden-nightlies.ams3.digitaloceanspaces.com/raiden-v0.100.3-macOS-x86_64.zip
 ```
 - Unzip the file:
 ```sh
@@ -58,7 +58,7 @@ unzip raiden-v0.100.3-macOS-x86_64.zip
 #### Linux instructions
 - Download the [latest stable linux binary](https://raiden-nightlies.ams3.digitaloceanspaces.com/raiden-v0.100.3-linux-x86_64.tar.gz):
 ```sh
-curl -O https://raiden-nightlies.ams3.digitaloceanspaces.com/raiden-v0.100.3-linux-x86_64.tar.gz
+curl -L -O https://raiden-nightlies.ams3.digitaloceanspaces.com/raiden-v0.100.3-linux-x86_64.tar.gz
 ```
 - Extract the file:
 ```sh
