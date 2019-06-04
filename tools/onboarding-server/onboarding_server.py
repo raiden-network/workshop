@@ -99,7 +99,7 @@ def wait_for_txs(
 @click.option('--redis-port', default=6379, show_default=True)
 @click.option('--faucet-amount-eth', default=1 * 10 ** 17, show_default=True)
 @click.option('--faucet-amount-tokens', default=1000 * 10 ** 18, show_default=True)
-@click.option('--faucet-timeout', default=60 * 60 * 24 * 7, show_default=True)
+@click.option('--faucet-timeout', default=60 * 10, show_default=True)
 @click.option(
     '--log-path',
     default=os.getcwd(),
@@ -154,7 +154,7 @@ def main(
             <html>
             <body>
             <div style="float:left; width: 80%">
-                <h1>Raiden @ DAppNode</h1>
+                <h1>Raiden Workshop @ TU BERLIN blockchain labs</h1>
             </div>
             <div style="float:right; width: 20%">
                 <img src="https://raiden.network/assets/logo-black.png" />
@@ -165,6 +165,10 @@ def main(
                 <a href="https://goerli.etherscan.io/address/{to_checksum_address(token_ctr.contract_address)}">
                     {token_ctr.contract.call().name()} ({to_checksum_address(token_ctr.contract_address)})
                 </a>
+            </p>
+              <p style="clear: both; overflow: hidden;">
+                To request göETH and tokens send a <code>POST</code> request to <code>{public_url}</code> with a JSON body
+                containing <code>{{"address": "&lt;eth-address&gt;", "client_hash": "&lt;client-auth-hash&gt;"}}</code>.
             </p>
         '''
 
