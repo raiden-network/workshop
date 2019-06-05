@@ -70,12 +70,13 @@ Once Raiden is installed it's time to fire it up. This is done with the followin
 ./raiden-binary \
     --keystore-path keystore \
     --network-id goerli \
+    --gas-price fast \ 
     --environment-type development \
     --eth-rpc-endpoint https://goerli.infura.io/v3/YOUR_INFURA_TOKEN
 ```
 This is how it looks like for Linux:
 ```sh
-./raiden-v0.100.3-linux-x86_64 --keystore-path keystore --network-id goerli --environment-type development --eth-rpc-endpoint https://goerli.infura.io/v3/YOUR_INFURA_TOKEN
+./raiden-v0.100.3-linux-x86_64 --keystore-path keystore --network-id goerli --gas-price fast --environment-type development --eth-rpc-endpoint https://goerli.infura.io/v3/YOUR_INFURA_TOKEN
 ```
 
 The node will ask you to accept the disclaimer and then ask you to choose which address you want to use. The list should only contain the one address the onboarder tool generated for you.
