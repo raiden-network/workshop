@@ -99,7 +99,7 @@ The first thing to do when Raiden is up and running is to open a channel with so
 ```sh
 curl -i -X PUT http://localhost:5001/api/1/channels \
     -H 'Content-Type: application/json' --data-raw \
-    '{"partner_address": "0x0bae0289AAA26845224F528F9B9DefE69e01606E", \
+    '{"partner_address": "0x2645bcF95d1c3fE89dB435be8AaEFb887832803b", \
     "token_address": "0x9B740B496dea54d747680e941921aD28BDA5789C", \
     "total_deposit": 10000000000000000000}'
 ```
@@ -128,3 +128,4 @@ Feel free to change the amounts of the payments.
 - [Raiden installation instructions](https://raiden-network.readthedocs.io/en/latest/overview_and_guide.html#installation)
 - [Getting Started with Raiden API](https://raiden-network.readthedocs.io/en/latest/api_walkthrough.html)
 - [TUBerlinToken](https://goerli.etherscan.io/address/0x9B740B496dea54d747680e941921aD28BDA5789C#code)
+- [Network explorer](https://goerli.explorer.raiden.network/tokens/0x9B740B496dea54d747680e941921aD28BDA5789C)
