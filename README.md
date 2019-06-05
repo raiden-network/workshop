@@ -97,7 +97,7 @@ You can also check out how the network is growing by checking out the [Raiden Ex
 The first thing to do when Raiden is up and running is to open a channel with someone. You can do so by opening a channel with the node below, or to find another hacker building on Raiden and open a channel with him. For this you just have to replace the `partner_address` below with his/her address.
 
 ```sh
-curl -i -X PUT http://localhost:5001/api/1/channels \
+curl -i -X PUT http://localhost:5001/api/v1/channels \
     -H 'Content-Type: application/json' --data-raw \
     '{"partner_address": "0x2645bcF95d1c3fE89dB435be8AaEFb887832803b", \
     "token_address": "0x9B740B496dea54d747680e941921aD28BDA5789C", \
@@ -107,7 +107,7 @@ curl -i -X PUT http://localhost:5001/api/1/channels \
 #### Deposit
 If you ever need to top up a channel, you can use the following command:
 ```sh
-curl -i -X PATCH http://localhost:5001/api/1/channels/ \
+curl -i -X PATCH http://localhost:5001/api/v1/channels/ \
 0x9B740B496dea54d747680e941921aD28BDA5789C/ADDRESS_OF_PARTNER \
 -H 'Content-Type: application/json' \
 --data-raw '{"total_deposit": 15000000000000000000}'
@@ -116,7 +116,7 @@ curl -i -X PATCH http://localhost:5001/api/1/channels/ \
 #### Make payments
 To make payments, choose the address of the partner you've opened a channel with and do the following:
 ```sh
-curl -i -X POST http://localhost:5001/api/1/payments/ \
+curl -i -X POST http://localhost:5001/api/v1/payments/ \
 0x9B740B496dea54d747680e941921aD28BDA5789C/ADDRESS_OF_RECEIVER \
 -H 'Content-Type: application/json' --data-raw '{"amount": 100000}'
 ```
