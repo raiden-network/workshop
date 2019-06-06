@@ -71,6 +71,7 @@ Once Raiden is installed it's time to fire it up. This is done with the followin
 ./raiden-binary \
     --keystore-path keystore \
     --network-id kovan \
+    --gas-price fast \
     --environment-type development \
     --eth-rpc-endpoint https://kovan.infura.io/v3/YOUR_INFURA_TOKEN
 ```
@@ -93,7 +94,7 @@ You can also check out how the network is growing by checking out the [Raiden Ex
 The first thing to do when Raiden is up and running is to open a channel with someone. You can do so by opening a channel with the node below, or to find another hacker building on Raiden and open a channel with him. For this you just have to replace the `partner_address` below with his/her address.
 
 ```sh
-curl -i -X PUT http://localhost:5001/api/1/channels \
+curl -i -X PUT http://localhost:5001/api/v1/channels \
     -H 'Content-Type: application/json' --data-raw \
     '{"partner_address": "0x0bae0289AAA26845224F528F9B9DefE69e01606E", \
     "token_address": "0x98a345f06e3A5DFe28EE0af38dd0780b4C0ed73B", \
@@ -103,7 +104,7 @@ curl -i -X PUT http://localhost:5001/api/1/channels \
 #### Deposit
 If you ever need to top up a channel, you can use the following command:
 ```sh
-curl -i -X PATCH http://localhost:5001/api/1/channels/ \
+curl -i -X PATCH http://localhost:5001/api/v1/channels/ \
 0x98a345f06e3A5DFe28EE0af38dd0780b4C0ed73B/ADDRESS_OF_PARTNER \
 -H 'Content-Type: application/json' \
 --data-raw '{"total_deposit": 15000000000000000000}'
@@ -112,7 +113,7 @@ curl -i -X PATCH http://localhost:5001/api/1/channels/ \
 #### Make payments
 To make payments, choose the address of the partner you've opened a channel with and do the following:
 ```sh
-curl -i -X POST http://localhost:5001/api/1/payments/ \
+curl -i -X POST http://localhost:5001/api/v1/payments/ \
 0x98a345f06e3A5DFe28EE0af38dd0780b4C0ed73B/ADDRESS_OF_RECEIVER \
 -H 'Content-Type: application/json' --data-raw '{"amount": 100000}'
 ```
