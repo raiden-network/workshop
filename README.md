@@ -98,7 +98,7 @@ The first thing to do when Raiden is up and running is to open a channel with so
 ```sh
 curl -i -X PUT http://localhost:5001/api/v1/channels \
     -H 'Content-Type: application/json' --data-raw \
-    '{"partner_address": "0x2645bcF95d1c3fE89dB435be8AaEFb887832803b", \
+    '{"partner_address": "0x9074B1A75Df21124ed81c7054CD99e137Fab01F5", \
     "token_address": "0x06B05eb77F6d7C4e7449105d36C7E04Fa9CFf3cA", \
     "total_deposit": 10000000000000000000}'
 ```
