@@ -1,8 +1,8 @@
-click==7.0
-structlog==18.2.0
-eth-utils==1.4.1
-Flask==1.0.2
+click==8.0.1
+structlog==21.1.0
+eth-utils==1.10.0
+Flask==2.0.1
 gunicorn==19.9.0
-raiden>=0.100.3
+raiden==2.0.0
 redis==2.10.6
-web3==4.9.1
+web3==5.19.0

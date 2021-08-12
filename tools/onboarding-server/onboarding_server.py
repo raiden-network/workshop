@@ -1,3 +1,4 @@
+from eth_utils.address import to_canonical_address
 from gevent.monkey import patch_all  # isort:skip # noqa
 patch_all()  # isort:skip # noqa
 
@@ -14,12 +15,13 @@ from flask import Flask, Response, request
 from gunicorn.app.base import BaseApplication
 from redis import StrictRedis
 from web3 import HTTPProvider, Web3
+from web3.contract import Contract 
+from web3.exceptions import TransactionNotFound
 from web3.gas_strategies.time_based import fast_gas_price_strategy
 
 from raiden.accounts import Account
 from raiden.log_config import configure_logging
-from raiden.network.rpc.client import JSONRPCClient, check_address_has_code
-from raiden.network.rpc.smartcontract_proxy import ContractProxy
+from raiden.network.rpc.client import EthTransfer, JSONRPCClient, check_address_has_code, gas_price_for_fast_transaction
 from raiden.utils.typing import TransactionHash
 from raiden_contracts.constants import CONTRACT_CUSTOM_TOKEN
 from raiden_contracts.contract_manager import ContractManager, contracts_precompiled_path
@@ -45,9 +47,9 @@ class GunicornApplication(BaseApplication):
         return self.application
 
 
-def _get_token_ctr(client, token_address) -> ContractProxy:
+def _get_token_ctr(client: JSONRPCClient, token_address) -> Contract:
     token_contract = ContractManager(contracts_precompiled_path()).get_contract(CONTRACT_CUSTOM_TOKEN)
-    check_address_has_code(client, token_address, 'Token')
+    check_address_has_code(client, token_address, 'Token', 'latest')
     return client.new_contract_proxy(token_contract['abi'], token_address)
 
 
@@ -73,7 +75,11 @@ def wait_for_txs(
                 timeout_remaining=int(remaining_timeout),
             )
         for txhash in txhashes.copy():
-            tx = web3.eth.getTransactionReceipt(txhash)
+            tx = None
+            try:
+                tx = web3.eth.getTransactionReceipt(txhash)
+            except TransactionNotFound:
+                pass
             if tx and tx['blockNumber'] is not None:
                 status = tx.get('status')
                 if status is not None and status == 0:
@@ -126,7 +132,7 @@ def main(
     click.secho(f'Writing log to {log_file_name}', fg='yellow')
     configure_logging(
         {'': 'INFO', 'raiden': 'DEBUG', 'onboarding_server': 'DEBUG'},
-        debug_log_file_name=log_file_name,
+        debug_log_file_path=log_file_name,
         _first_party_packages=frozenset(['raiden', 'onboarding_server']),
     )
 
@@ -139,7 +145,7 @@ def main(
         gas_price_strategy=fast_gas_price_strategy,
     )
 
-    token_ctr = _get_token_ctr(client, token_address)
+    token_ctr = _get_token_ctr(client, to_canonical_address(token_address))
 
     if public_url is None:
         public_url = f'http://{bind_addr}/'
@@ -154,7 +160,7 @@ def main(
             <html>
             <body>
             <div style="float:left; width: 80%">
-                <h1>Raiden Workshop @ TU BERLIN blockchain labs</h1>
+                <h1>Raiden Goerli Wizard Faucet</h1>
             </div>
             <div style="float:right; width: 20%">
                 <img src="https://raiden.network/assets/logo-black.png" />
@@ -162,8 +168,8 @@ def main(
             <br style="overflow: hidden;"/>
             <p>
                 Token: 
-                <a href="https://goerli.etherscan.io/address/{to_checksum_address(token_ctr.contract_address)}">
-                    {token_ctr.contract.call().name()} ({to_checksum_address(token_ctr.contract_address)})
+                <a href="https://goerli.etherscan.io/address/{to_checksum_address(token_ctr.address)}">
+                    {token_ctr.functions.name().call()} ({to_checksum_address(token_ctr.address)})
                 </a>
             </p>
               <p style="clear: both; overflow: hidden;">
@@ -201,10 +207,22 @@ def main(
                 content_type='application/json',
             )
         log.info('Fauceting', target=address)
+
+        gas_price = gas_price_for_fast_transaction(client.web3)
         txhashes = {
-            client.send_transaction(to=address, startgas=21_000, value=faucet_amount_eth),
-            token_ctr.transact('mintFor', 100_000, faucet_amount_tokens, address)
+            client.transact(
+                EthTransfer(to_address=to_canonical_address(address), value=faucet_amount_eth, gas_price=gas_price)
+            ).transaction_hash
         }
+        estimated_mint_tx = client.estimate_gas(
+            token_ctr, 'mintFor', {}, faucet_amount_tokens, address
+        )
+        if estimated_mint_tx:
+            mint_tx_sent = client.transact(estimated_mint_tx)
+            txhashes.add(mint_tx_sent.transaction_hash)
+        else:
+            log.info(f'Could not estimate gas for mint transaction. Skipping mint.', address=address)
+        
         try:
             wait_for_txs(client, txhashes, timeout=tx_timeout)
         except RuntimeError as ex:
