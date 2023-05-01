@@ -1,7 +1,7 @@
 click==6.7
 structlog==18.2.0
 eth-utils==1.2.1
-Flask==1.0.2
+Flask==2.3.2
 gunicorn==19.9.0
 raiden>=0.15.0
 redis==2.10.6
