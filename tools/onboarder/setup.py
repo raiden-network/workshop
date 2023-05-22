@@ -13,7 +13,7 @@ setup(
         'click==6.7',
         'eth-keyfile==0.5.1',
         'eth-utils==1.2.1',
-        'requests==2.20.0',
+        'requests==2.31.0',
     ],
     entry_points={
         'console_scripts': [
